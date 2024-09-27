@@ -5,7 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background"
+    android:background="?attr/colorPrimary"
     android:orientation="vertical"
     tools:context=".MainActivity">
 
@@ -16,90 +16,61 @@
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginVertical="@dimen/margin_min"
-            android:layout_marginStart="@dimen/margin_min"
-            android:layout_marginEnd="52dp">
+            android:layout_marginVertical="@dimen/margin_extra_extra_small"
+            android:layout_marginStart="@dimen/margin_extra_extra_small"
+            android:layout_marginEnd="@dimen/margin_extra_large">
 
             <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginVertical="@dimen/margin_min"
-                android:layout_marginStart="@dimen/margin_min"
-                android:layout_marginEnd="96dp">
+                android:layout_marginVertical="@dimen/margin_extra_extra_small"
+                android:layout_marginStart="@dimen/margin_extra_extra_small"
+                android:layout_marginEnd="@dimen/margin_huge">
 
                 <TextView
+                    style="@style/TitleHead.White"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_marginStart="@dimen/margin_low"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginEnd="50dp"
-                    android:layout_marginBottom="@dimen/margin_low"
-                    android:fontFamily="@font/yandex_sans_text_medium"
-                    android:text="@string/title"
-                    android:textColor="@color/white"
-                    android:textSize="@dimen/text_size_main" />
+                    android:layout_marginStart="@dimen/margin_little"
+                    android:layout_marginTop="@dimen/margin_small"
+                    android:layout_marginEnd="@dimen/margin_large"
+                    android:layout_marginBottom="@dimen/margin_little"
+                    android:text="@string/title" />
             </FrameLayout>
         </FrameLayout>
     </FrameLayout>
 
     <Button
         android:id="@+id/search"
+        style="@style/ButtonMain"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginHorizontal="@dimen/margin_mid"
-        android:layout_marginTop="24dp"
+        android:layout_marginHorizontal="@dimen/margin_normal"
+        android:layout_marginTop="@dimen/margin_big"
         android:layout_weight="1"
-        android:backgroundTint="@android:color/white"
-        android:fontFamily="@font/yandex_sans_text_medium"
-        android:gravity="center"
         android:text="@string/search"
-        android:textAllCaps="false"
-        android:textColor="@color/light_black"
-        android:textSize="@dimen/text_size_main"
-        app:cornerRadius="@dimen/button_corner_radius"
-        app:icon="@drawable/ic_main_search_inactive"
-        app:iconGravity="textStart"
-        app:iconPadding="@dimen/icon_padding"
-        app:iconTint="@color/light_black" />
+        app:icon="@drawable/ic_magnifying_glass_large" />
 
     <Button
         android:id="@+id/library"
+        style="@style/ButtonMain"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginHorizontal="@dimen/margin_mid"
-        android:layout_marginTop="@dimen/margin_mid"
+        android:layout_marginHorizontal="@dimen/margin_normal"
+        android:layout_marginTop="@dimen/margin_normal"
         android:layout_weight="1"
-        android:backgroundTint="@android:color/white"
-        android:fontFamily="@font/yandex_sans_text_medium"
-        android:gravity="center"
         android:text="@string/library"
-        android:textAllCaps="false"
-        android:textColor="@color/light_black"
-        android:textSize="@dimen/text_size_main"
-        app:cornerRadius="@dimen/button_corner_radius"
-        app:icon="@drawable/ic_main_library_inactive"
-        app:iconGravity="textStart"
-        app:iconPadding="@dimen/icon_padding"
-        app:iconTint="@color/light_black" />
+        app:icon="@drawable/ic_library" />
 
     <Button
         android:id="@+id/settings"
+        style="@style/ButtonMain"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginHorizontal="@dimen/margin_mid"
-        android:layout_marginTop="@dimen/margin_mid"
-        android:layout_marginBottom="28dp"
+        android:layout_marginHorizontal="@dimen/margin_normal"
+        android:layout_marginTop="@dimen/margin_normal"
+        android:layout_marginBottom="@dimen/margin_extra_big"
         android:layout_weight="1"
-        android:backgroundTint="@android:color/white"
-        android:fontFamily="@font/yandex_sans_text_medium"
-        android:gravity="center"
         android:text="@string/settings"
-        android:textAllCaps="false"
-        android:textColor="@color/light_black"
-        android:textSize="@dimen/text_size_main"
-        app:cornerRadius="@dimen/button_corner_radius"
-        app:icon="@drawable/ic_main_settings_inactive"
-        app:iconGravity="textStart"
-        app:iconPadding="@dimen/icon_padding"
-        app:iconTint="@color/light_black" />
+        app:icon="@drawable/ic_settings" />
 </LinearLayout>

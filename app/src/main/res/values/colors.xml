@@ -1,7 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="black">#FF000000</color>
-    <color name="white">#FFFFFFFF</color>
-    <color name="light_black">#1A1B22</color>
-    <color name="background">#3772E7</color>
+    <color name="color_black">#FF000000</color>
+    <color name="color_white">#FFFFFFFF</color>
+    <color name="color_eerie_black">#1A1B22</color>
+    <color name="color_royal_blue">#3772E7</color>
+    <color name="color_silver_foil">#AEAFB4</color>
+    <color name="color_bright_gray">#E6E8EB</color>
+    <color name="color_baby_blue_eyes">#9FBBF3</color>
+    <color name="setting_icons">@color/color_silver_foil</color>
+    <color name="button_backward">@color/color_eerie_black</color>
+    <color name="button_magnifying_glass">@color/color_silver_foil</color>
+    <color name="button_search_clear">@color/color_silver_foil</color>
+    <color name="search_hint">@color/color_silver_foil</color>
+    <color name="switch_tint_background">@color/color_bright_gray</color>
+    <color name="switch_tint_track">@color/color_bright_gray</color>
+    <color name="cursor">@color/color_bright_gray</color>
 </resources>

@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/settings"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
+    android:background="?attr/colorSecondary"
     android:orientation="vertical">
 
     <FrameLayout
@@ -13,9 +14,9 @@
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginVertical="@dimen/margin_min"
-            android:layout_marginStart="@dimen/margin_min"
-            android:layout_marginEnd="52dp">
+            android:layout_marginVertical="@dimen/margin_extra_extra_small"
+            android:layout_marginStart="@dimen/margin_extra_extra_small"
+            android:layout_marginEnd="@dimen/margin_extra_large">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -26,18 +27,16 @@
                     android:id="@+id/button_back"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:padding="16dp"
-                    android:src="@drawable/ic_settings_light_arrow_back" />
+                    android:padding="@dimen/padding_big"
+                    android:src="@drawable/ic_arrow_back" />
 
                 <TextView
+                    style="@style/TitleText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    android:layout_marginStart="12dp"
-                    android:fontFamily="@font/yandex_sans_text_medium"
-                    android:text="@string/settings"
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/text_size_main" />
+                    android:layout_marginStart="@dimen/margin_little"
+                    android:text="@string/settings" />
             </LinearLayout>
         </FrameLayout>
     </FrameLayout>
@@ -45,28 +44,28 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/margin_mid"
+        android:layout_marginStart="@dimen/margin_little"
         android:orientation="vertical">
 
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="24dp">
+            android:layout_marginTop="@dimen/margin_big">
 
             <TextView
+                style="@style/TextViewSettings"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginVertical="@dimen/margin_vertical"
-                android:fontFamily="@font/yandex_sans_text_regular"
-                android:text="@string/theme_dark"
-                android:textColor="@color/black"
-                android:textSize="@dimen/text_size_settings" />
+                android:layout_marginVertical="@dimen/margin_medium"
+                android:text="@string/theme_dark" />
 
             <Switch
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="end|center_vertical"
-                android:paddingVertical="14dp" />
+                android:paddingVertical="@dimen/padding_medium"
+                android:thumbTint="@color/thumb_color"
+                android:trackTint="@color/switch_tint_track" />
 
         </FrameLayout>
 
@@ -75,20 +74,19 @@
             android:layout_height="wrap_content">
 
             <TextView
+                style="@style/TextViewSettings"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginVertical="@dimen/margin_vertical"
-                android:fontFamily="@font/yandex_sans_text_regular"
-                android:text="@string/share"
-                android:textColor="@color/black"
-                android:textSize="@dimen/text_size_settings" />
+                android:layout_marginVertical="@dimen/margin_medium"
+                android:text="@string/share" />
 
             <ImageView
+                android:id="@+id/button_share"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="end|center_vertical"
-                android:layout_marginEnd="@dimen/margin_mid"
-                android:src="@drawable/ic_settings_light_share">
+                android:layout_marginEnd="@dimen/margin_normal"
+                android:src="@drawable/ic_share">
 
             </ImageView>
 
@@ -99,20 +97,19 @@
             android:layout_height="wrap_content">
 
             <TextView
+                style="@style/TextViewSettings"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginVertical="@dimen/margin_vertical"
-                android:fontFamily="@font/yandex_sans_text_regular"
-                android:text="@string/write_to_support"
-                android:textColor="@color/black"
-                android:textSize="@dimen/text_size_settings" />
+                android:layout_marginVertical="@dimen/margin_medium"
+                android:text="@string/write_to_support" />
 
             <ImageView
+                android:id="@+id/button_support"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="end|center_vertical"
-                android:layout_marginEnd="14dp"
-                android:src="@drawable/ic_settings_light_support">
+                android:layout_marginEnd="@dimen/margin_default"
+                android:src="@drawable/ic_support">
 
             </ImageView>
 
@@ -122,23 +119,21 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-
             <TextView
+                style="@style/TextViewSettings"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginVertical="@dimen/margin_vertical"
-                android:fontFamily="@font/yandex_sans_text_regular"
-                android:text="@string/users_agreement"
-                android:textColor="@color/black"
-                android:textSize="@dimen/text_size_settings" />
+                android:layout_marginVertical="@dimen/margin_medium"
+                android:text="@string/users_agreement" />
 
             <ImageView
+                android:id="@+id/button_users_agreement"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="end|center_vertical"
-                android:layout_marginEnd="12dp"
-                android:padding="8dp"
-                android:src="@drawable/ic_settings_light_arrow_forward">
+                android:layout_marginEnd="@dimen/margin_little"
+                android:padding="@dimen/padding_little"
+                android:src="@drawable/ic_arrow_forward">
 
             </ImageView>
         </FrameLayout>
