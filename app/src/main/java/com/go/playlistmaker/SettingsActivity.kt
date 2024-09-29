@@ -4,6 +4,7 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.widget.ImageView
+import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -22,9 +23,9 @@ class SettingsActivity : AppCompatActivity() {
         }
 
         val buttonBackward = findViewById<ImageView>(R.id.button_back)
-        val buttonShare = findViewById<ImageView>(R.id.button_share)
-        val buttonSupport = findViewById<ImageView>(R.id.button_support)
-        val buttonUserAgreement = findViewById<ImageView>(R.id.button_users_agreement)
+        val buttonShare = findViewById<TextView>(R.id.button_share)
+        val buttonSupport = findViewById<TextView>(R.id.button_support)
+        val buttonUserAgreement = findViewById<TextView>(R.id.button_users_agreement)
 
         buttonBackward.setOnClickListener {
             finish()

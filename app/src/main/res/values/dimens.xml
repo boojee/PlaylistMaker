@@ -16,10 +16,13 @@
     <dimen name="margin_extra_large">52dp</dimen>
     <dimen name="margin_huge">96dp</dimen>
 
-    <dimen name="padding_small">2dp</dimen>
-    <dimen name="padding_little">8dp</dimen>
-    <dimen name="padding_medium">14dp</dimen>
-    <dimen name="padding_big">16dp</dimen>
+    <dimen name="padding_extra_extra_small">2dp</dimen>
+    <dimen name="padding_extra_small">8dp</dimen>
+    <dimen name="padding_small">14dp</dimen>
+    <dimen name="padding_little">16dp</dimen>
+    <dimen name="padding_default">18dp</dimen>
+    <dimen name="padding_normal">20dp</dimen>
+    <dimen name="padding_medium">22dp</dimen>
     <dimen name="padding_large">36dp</dimen>
 
     <dimen name="corner_radius_small">8dp</dimen>

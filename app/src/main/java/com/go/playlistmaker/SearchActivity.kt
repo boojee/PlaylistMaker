@@ -4,7 +4,6 @@ import android.content.Context
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.view.View
 import android.widget.EditText
 import android.widget.ImageView
 import androidx.activity.enableEdgeToEdge
@@ -12,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import android.view.inputmethod.InputMethodManager
+import androidx.core.view.isVisible
 
 class SearchActivity : AppCompatActivity() {
 
@@ -39,6 +39,8 @@ class SearchActivity : AppCompatActivity() {
         editTextSearch = findViewById(R.id.edit_text_search)
         buttonClear = findViewById(R.id.button_clear)
 
+        buttonClear?.isVisible = !editTextSearch?.text.isNullOrEmpty()
+
         buttonClear?.setOnClickListener {
             editTextSearch?.setText("")
             if (editTextSearch != null) {
@@ -55,7 +57,7 @@ class SearchActivity : AppCompatActivity() {
             }
 
             override fun afterTextChanged(s: Editable?) {
-                buttonClear?.visibility = buttonClearVisibility(s.toString())
+                buttonClear?.isVisible = !s.isNullOrEmpty()
             }
         }
 
@@ -66,14 +68,6 @@ class SearchActivity : AppCompatActivity() {
             editTextSearch?.setText(editTextContent)
         }
 
-    }
-
-    fun buttonClearVisibility(s: CharSequence?): Int {
-        return if (s.isNullOrEmpty()) {
-            View.GONE
-        } else {
-            View.VISIBLE
-        }
     }
 
     override fun onSaveInstanceState(outState: Bundle) {

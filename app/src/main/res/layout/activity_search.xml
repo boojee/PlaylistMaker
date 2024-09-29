@@ -28,7 +28,7 @@
                     android:id="@+id/button_back"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:padding="@dimen/padding_big"
+                    android:padding="@dimen/padding_little"
                     android:src="@drawable/ic_arrow_back" />
 
                 <TextView
@@ -62,7 +62,7 @@
                 android:layout_height="wrap_content"
                 android:hint="@string/search_hint"
                 android:paddingHorizontal="@dimen/padding_large"
-                android:paddingVertical="@dimen/padding_medium">
+                android:paddingVertical="@dimen/padding_small">
 
             </EditText>
 
@@ -82,7 +82,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="end|center_vertical"
                 android:layout_marginEnd="@dimen/margin_little"
-                android:padding="@dimen/padding_small"
+                android:padding="@dimen/padding_extra_extra_small"
                 android:src="@drawable/ic_clear">
 
             </ImageView>
