@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="setting_icons">@color/color_white</color>
+    <color name="button_backward">@color/color_white</color>
+    <color name="button_magnifying_glass">@color/color_eerie_black</color>
+    <color name="button_search_clear">@color/color_eerie_black</color>
+    <color name="search_hint">@color/color_eerie_black</color>
+    <color name="switch_tint_background">@color/color_white</color>
+    <color name="switch_tint_track">@color/color_royal_blue</color>
+</resources>

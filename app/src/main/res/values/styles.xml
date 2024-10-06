@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="ButtonMain" parent="Widget.MaterialComponents.Button.UnelevatedButton">
+        <item name="android:backgroundTint">@android:color/white</item>
+        <item name="fontFamily">@font/ys_display_medium</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:textColor">@color/color_eerie_black</item>
+        <item name="android:textFontWeight">500</item>
+        <item name="android:textSize">@dimen/text_size_large</item>
+        <item name="cornerRadius">@dimen/corner_radius_medium</item>
+        <item name="iconGravity">textStart</item>
+        <item name="iconPadding">@dimen/icon_padding_default</item>
+        <item name="iconTint">@color/color_eerie_black</item>
+        <item name="android:gravity">center</item>
+    </style>
+
+    <style name="TitleHead">
+        <item name="fontFamily">@font/ys_display_medium</item>
+        <item name="android:textFontWeight">500</item>
+        <item name="android:textSize">@dimen/text_size_large</item>
+    </style>
+
+    <style name="TitleHead.White" parent="TitleHead">
+        <item name="android:textColor">@color/color_white</item>
+    </style>
+
+    <style name="TitleText" parent="TitleHead">
+        <item name="android:textColor">@color/color_black</item>
+    </style>
+
+    <style name="TextViewSettings">
+        <item name="fontFamily">@font/ys_display_regular</item>
+        <item name="android:textColor">@color/color_black</item>
+        <item name="android:textFontWeight">400</item>
+        <item name="android:textSize">@dimen/text_size_medium</item>
+    </style>
+
+    <style name="EditText">
+        <item name="android:background">@drawable/rounded_edittext</item>
+        <item name="android:inputType">text</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:textColorHint">@color/search_hint</item>
+        <item name="android:textFontWeight">400</item>
+        <item name="android:textSize">@dimen/text_size_medium</item>
+        <item name="android:textColor">@color/color_eerie_black</item>
+        <item name="android:textCursorDrawable">@drawable/custom_cursor</item>
+    </style>
+
+</resources>
