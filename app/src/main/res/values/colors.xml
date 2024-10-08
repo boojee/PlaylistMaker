@@ -15,4 +15,6 @@
     <color name="switch_tint_background">@color/color_bright_gray</color>
     <color name="switch_tint_track">@color/color_bright_gray</color>
     <color name="cursor">@color/color_bright_gray</color>
+    <color name="track_title">@color/color_eerie_black</color>
+    <color name="track_artist_and_timing">@color/color_silver_foil</color>
 </resources>

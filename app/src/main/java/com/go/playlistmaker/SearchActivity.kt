@@ -12,12 +12,16 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import android.view.inputmethod.InputMethodManager
 import androidx.core.view.isVisible
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 
 class SearchActivity : AppCompatActivity() {
 
     private var editTextSearch: EditText? = null
     private var buttonClear: ImageView? = null
     private var editTextContent: String? = null
+    private var buttonBackward: ImageView? = null
+    private var recyclerView: RecyclerView? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,14 +34,16 @@ class SearchActivity : AppCompatActivity() {
             insets
         }
 
-        val buttonBackward = findViewById<ImageView>(R.id.button_back)
-
-        buttonBackward.setOnClickListener {
-            finish()
-        }
-
         editTextSearch = findViewById(R.id.edit_text_search)
         buttonClear = findViewById(R.id.button_clear)
+        buttonBackward = findViewById(R.id.button_back)
+        recyclerView = findViewById(R.id.recycler_view_search)
+
+        initRecyclerView()
+
+        buttonBackward?.setOnClickListener {
+            finish()
+        }
 
         buttonClear?.isVisible = !editTextSearch?.text.isNullOrEmpty()
 
@@ -68,6 +74,12 @@ class SearchActivity : AppCompatActivity() {
             editTextSearch?.setText(editTextContent)
         }
 
+    }
+
+    private fun initRecyclerView() {
+        recyclerView?.layoutManager = LinearLayoutManager(this)
+        val trackAdapter = TrackAdapter(MockList.createTrackList())
+        recyclerView?.adapter = trackAdapter
     }
 
     override fun onSaveInstanceState(outState: Bundle) {

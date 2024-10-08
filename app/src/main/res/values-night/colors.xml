@@ -7,4 +7,6 @@
     <color name="search_hint">@color/color_eerie_black</color>
     <color name="switch_tint_background">@color/color_white</color>
     <color name="switch_tint_track">@color/color_royal_blue</color>
+    <color name="track_title">@color/color_white</color>
+    <color name="track_artist_and_timing">@color/color_white</color>
 </resources>
