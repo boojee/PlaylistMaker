@@ -7,100 +7,75 @@
     android:background="?attr/colorSecondary"
     android:orientation="vertical">
 
-    <FrameLayout
+    <com.google.android.material.appbar.MaterialToolbar
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        app:contentInsetStart="0dp">
 
-        <FrameLayout
-            android:layout_width="match_parent"
+        <ImageView
+            android:id="@+id/button_back"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginVertical="@dimen/margin_extra_extra_small"
             android:layout_marginStart="@dimen/margin_extra_extra_small"
-            android:layout_marginEnd="@dimen/margin_extra_large">
+            android:padding="@dimen/padding_little"
+            android:src="@drawable/ic_arrow_back" />
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
+        <TextView
+            style="@style/TitleText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_little"
+            android:text="@string/settings" />
 
-                <ImageView
-                    android:id="@+id/button_back"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:padding="@dimen/padding_little"
-                    android:src="@drawable/ic_arrow_back" />
+    </com.google.android.material.appbar.MaterialToolbar>
 
-                <TextView
-                    style="@style/TitleText"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginStart="@dimen/margin_little"
-                    android:text="@string/settings" />
-            </LinearLayout>
-        </FrameLayout>
-    </FrameLayout>
-
-    <LinearLayout
+    <com.google.android.material.switchmaterial.SwitchMaterial
+        style="@style/TextViewSettings"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/margin_little"
-        android:orientation="vertical">
+        android:layout_marginTop="@dimen/margin_big"
+        android:paddingVertical="@dimen/margin_medium"
+        android:paddingEnd="@dimen/padding_small"
+        android:text="@string/theme_dark"
+        android:thumbTintMode="screen"
+        app:thumbTint="@color/thumb_color"
+        app:trackTint="@color/switch_tint_track" />
 
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_big">
+    <TextView
+        android:id="@+id/button_share"
+        style="@style/TextViewSettings"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="@dimen/margin_medium"
+        android:layout_marginStart="@dimen/margin_little"
+        android:drawablePadding="@dimen/margin_normal"
+        android:paddingEnd="@dimen/padding_normal"
+        android:text="@string/share"
+        app:drawableEndCompat="@drawable/ic_share" />
 
-            <TextView
-                style="@style/TextViewSettings"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginVertical="@dimen/margin_medium"
-                android:text="@string/theme_dark" />
+    <TextView
+        android:id="@+id/button_support"
+        style="@style/TextViewSettings"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="@dimen/margin_medium"
+        android:layout_marginStart="@dimen/margin_little"
+        android:drawablePadding="@dimen/margin_default"
+        android:paddingEnd="@dimen/padding_default"
+        android:text="@string/write_to_support"
+        app:drawableEndCompat="@drawable/ic_support" />
 
-            <Switch
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="end|center_vertical"
-                android:paddingVertical="@dimen/padding_small"
-                android:thumbTint="@color/thumb_color"
-                android:trackTint="@color/switch_tint_track" />
+    <TextView
+        android:id="@+id/button_users_agreement"
+        style="@style/TextViewSettings"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="@dimen/margin_medium"
+        android:layout_marginStart="@dimen/margin_little"
+        android:drawablePadding="@dimen/margin_little"
+        android:paddingEnd="@dimen/padding_medium"
+        android:text="@string/users_agreement"
+        app:drawableEndCompat="@drawable/ic_arrow_forward" />
 
-        </FrameLayout>
-
-        <TextView
-            android:id="@+id/button_share"
-            style="@style/TextViewSettings"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginVertical="@dimen/margin_medium"
-            android:drawablePadding="@dimen/margin_normal"
-            android:paddingEnd="@dimen/padding_normal"
-            android:text="@string/share"
-            app:drawableEndCompat="@drawable/ic_share" />
-
-        <TextView
-            android:id="@+id/button_support"
-            style="@style/TextViewSettings"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginVertical="@dimen/margin_medium"
-            android:drawablePadding="@dimen/margin_default"
-            android:paddingEnd="@dimen/padding_default"
-            android:text="@string/write_to_support"
-            app:drawableEndCompat="@drawable/ic_support" />
-
-        <TextView
-            android:id="@+id/button_users_agreement"
-            style="@style/TextViewSettings"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginVertical="@dimen/margin_medium"
-            android:drawablePadding="@dimen/margin_little"
-            android:paddingEnd="@dimen/padding_medium"
-            android:text="@string/users_agreement"
-            app:drawableEndCompat="@drawable/ic_arrow_forward" />
-
-    </LinearLayout>
 </LinearLayout>
