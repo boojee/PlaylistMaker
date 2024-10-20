@@ -75,10 +75,12 @@ class SearchActivity : AppCompatActivity() {
 
         buttonClear?.setOnClickListener {
             editTextSearch?.setText("")
-            if (editTextSearch != null) {
-                (getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager)
-                    .hideSoftInputFromWindow(editTextSearch!!.windowToken, 0)
-            }
+            editTextSearch?.clearFocus()
+
+            hideKeyboard()
+            hideSearchResults()
+
+
         }
 
         val simpleEditTextSearch = object : TextWatcher {
@@ -90,6 +92,10 @@ class SearchActivity : AppCompatActivity() {
 
             override fun afterTextChanged(s: Editable?) {
                 buttonClear?.isVisible = !s.isNullOrEmpty()
+
+                if (s.isNullOrEmpty()) {
+                    hideSearchResults()
+                }
             }
         }
 
@@ -166,6 +172,18 @@ class SearchActivity : AppCompatActivity() {
 
             }
         })
+    }
+
+    private fun hideKeyboard() {
+        if (editTextSearch != null) {
+            (getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager)
+                .hideSoftInputFromWindow(editTextSearch!!.windowToken, 0)
+        }
+    }
+
+    private fun hideSearchResults() {
+        recyclerView?.isVisible = false
+        searchPlaceholder?.isVisible = false
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
