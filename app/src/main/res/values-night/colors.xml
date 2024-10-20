@@ -6,7 +6,8 @@
     <color name="button_search_clear">@color/color_eerie_black</color>
     <color name="search_hint">@color/color_eerie_black</color>
     <color name="switch_tint_background">@color/color_white</color>
-    <color name="switch_tint_track">@color/color_royal_blue</color>
+    <color name="switch_tint_track">@color/color_baby_blue_eyes_with_opacity</color>
     <color name="track_title">@color/color_white</color>
     <color name="track_artist_and_timing">@color/color_white</color>
+    <color name="icon_search_error">@color/color_white</color>
 </resources>

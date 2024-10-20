@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="text_size_small">11sp</dimen>
-    <dimen name="text_size_medium">16sp</dimen>
+    <dimen name="text_size_little">14sp</dimen>
+    <dimen name="text_size_default">16sp</dimen>
+    <dimen name="text_size_medium">19sp</dimen>
     <dimen name="text_size_large">22sp</dimen>
 
     <dimen name="margin_extra_extra_small">4dp</dimen>
@@ -30,6 +32,7 @@
 
     <dimen name="corner_radius_small">8dp</dimen>
     <dimen name="corner_radius_medium">16dp</dimen>
+    <dimen name="corner_radius_large">54dp</dimen>
 
     <dimen name="icon_padding_default">10dp</dimen>
 
