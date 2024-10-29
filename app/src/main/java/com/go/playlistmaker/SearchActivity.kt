@@ -17,13 +17,14 @@ import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
-import androidx.appcompat.widget.AppCompatDrawableManager
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+
+private const val SEARCH_HISTORY_KEY = "search_history"
 
 class SearchActivity : AppCompatActivity() {
 
@@ -43,6 +44,9 @@ class SearchActivity : AppCompatActivity() {
     private var buttonRefresh: Button? = null
     private var lastSearchQuery: String? = null
     private var isLastRequestFailed: Boolean = false
+    private var searchTextViewForHistory: TextView? = null
+    private var buttonClearSearchHistory: Button? = null
+    private var searchHistory: SearchHistory? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -64,8 +68,13 @@ class SearchActivity : AppCompatActivity() {
         errorIcon = findViewById(R.id.error_icon)
         searchPlaceholder = findViewById(R.id.search_placeholder)
         buttonRefresh = findViewById(R.id.button_refresh)
+        searchTextViewForHistory = findViewById(R.id.search_text_view_for_history)
+        buttonClearSearchHistory = findViewById(R.id.button_clear_search_history)
 
         initRecyclerView()
+
+        val sharedPreferences = getSharedPreferences(SEARCH_HISTORY_KEY, Context.MODE_PRIVATE)
+        searchHistory = SearchHistory(sharedPreferences)
 
         buttonBackward?.setOnClickListener {
             finish()
@@ -79,8 +88,7 @@ class SearchActivity : AppCompatActivity() {
 
             hideKeyboard()
             hideSearchResults()
-
-
+            displaySearchHistory()
         }
 
         val simpleEditTextSearch = object : TextWatcher {
@@ -94,7 +102,10 @@ class SearchActivity : AppCompatActivity() {
                 buttonClear?.isVisible = !s.isNullOrEmpty()
 
                 if (s.isNullOrEmpty()) {
-                    hideSearchResults()
+                    displaySearchHistory()
+                } else {
+                    hideSearchHistory()
+                    recyclerView?.isVisible = false
                 }
             }
         }
@@ -109,6 +120,14 @@ class SearchActivity : AppCompatActivity() {
             false
         }
 
+        editTextSearch?.onFocusChangeListener = View.OnFocusChangeListener { _, hasFocus ->
+            if (hasFocus && editTextSearch?.text.isNullOrEmpty()) {
+                displaySearchHistory()
+            } else {
+                hideSearchHistory()
+            }
+        }
+
         if (savedInstanceState != null) {
             editTextContent = savedInstanceState.getString("EDIT_TEXT_CONTENT")
             editTextSearch?.setText(editTextContent)
@@ -119,11 +138,31 @@ class SearchActivity : AppCompatActivity() {
                 findMusic(lastSearchQuery!!)
             }
         }
+
+        buttonClearSearchHistory?.setOnClickListener {
+            searchHistory?.clearHistory()
+            displaySearchHistory()
+        }
+
+        if (savedInstanceState != null) {
+            editTextContent = savedInstanceState.getString("EDIT_TEXT_CONTENT")
+            editTextSearch?.setText(editTextContent)
+        }
+
+        displaySearchHistory()
+
     }
 
     private fun initRecyclerView() {
         recyclerView?.layoutManager = LinearLayoutManager(this)
-        trackAdapter = TrackAdapter()
+        trackAdapter = TrackAdapter { track ->
+            searchHistory?.addTrack(track)
+            Toast.makeText(this, "Трек добавлен в историю", Toast.LENGTH_SHORT).show()
+            if (searchTextViewForHistory?.isVisible == true) {
+                trackAdapter?.setItems(searchHistory?.getHistory() ?: emptyList())
+                trackAdapter?.notifyDataSetChanged()
+            }
+        }
         recyclerView?.adapter = trackAdapter
     }
 
@@ -131,8 +170,7 @@ class SearchActivity : AppCompatActivity() {
         lastSearchQuery = text
         itunesService.findMusic(text).enqueue(object : Callback<TrackResponse> {
             override fun onResponse(
-                call: Call<TrackResponse>,
-                response: Response<TrackResponse>
+                call: Call<TrackResponse>, response: Response<TrackResponse>
             ) {
                 if (response.code() == 200) {
                     musicList.clear()
@@ -153,11 +191,8 @@ class SearchActivity : AppCompatActivity() {
                     }
                 } else {
                     Toast.makeText(
-                        applicationContext,
-                        getString(R.string.something_wrong),
-                        Toast.LENGTH_LONG
-                    )
-                        .show()
+                        applicationContext, getString(R.string.something_wrong), Toast.LENGTH_LONG
+                    ).show()
                 }
             }
 
@@ -169,16 +204,35 @@ class SearchActivity : AppCompatActivity() {
                 buttonRefresh?.isVisible = true
                 isLastRequestFailed = true
                 errorIcon?.setImageDrawable(getDrawable(R.drawable.ic_no_internet))
-
             }
         })
     }
 
+    private fun displaySearchHistory() {
+        val history = searchHistory?.getHistory()
+
+        if (editTextSearch?.hasFocus() == true && editTextSearch?.text.isNullOrEmpty() && history?.isNotEmpty() == true) {
+            searchTextViewForHistory?.isVisible = true
+            buttonClearSearchHistory?.isVisible = true
+            recyclerView?.isVisible = true
+            trackAdapter?.setItems(history)
+        } else {
+            hideSearchHistory()
+        }
+    }
+
     private fun hideKeyboard() {
         if (editTextSearch != null) {
-            (getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager)
-                .hideSoftInputFromWindow(editTextSearch!!.windowToken, 0)
+            (getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager).hideSoftInputFromWindow(
+                editTextSearch!!.windowToken, 0
+            )
         }
+    }
+
+    private fun hideSearchHistory() {
+        searchTextViewForHistory?.isVisible = false
+        buttonClearSearchHistory?.isVisible = false
+        recyclerView?.isVisible = false
     }
 
     private fun hideSearchResults() {
