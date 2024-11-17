@@ -9,36 +9,19 @@
     android:orientation="vertical"
     tools:context=".MainActivity">
 
-    <FrameLayout
+    <com.google.android.material.appbar.MaterialToolbar
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        app:contentInsetStart="0dp">
 
-        <FrameLayout
-            android:layout_width="match_parent"
+        <TextView
+            style="@style/TitleHead.White"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginVertical="@dimen/margin_extra_extra_small"
-            android:layout_marginStart="@dimen/margin_extra_extra_small"
-            android:layout_marginEnd="@dimen/margin_extra_large">
+            android:layout_marginStart="@dimen/margin_medium"
+            android:text="@string/title" />
 
-            <FrameLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginVertical="@dimen/margin_extra_extra_small"
-                android:layout_marginStart="@dimen/margin_extra_extra_small"
-                android:layout_marginEnd="@dimen/margin_huge">
-
-                <TextView
-                    style="@style/TitleHead.White"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginStart="@dimen/margin_little"
-                    android:layout_marginTop="@dimen/margin_small"
-                    android:layout_marginEnd="@dimen/margin_large"
-                    android:layout_marginBottom="@dimen/margin_little"
-                    android:text="@string/title" />
-            </FrameLayout>
-        </FrameLayout>
-    </FrameLayout>
+    </com.google.android.material.appbar.MaterialToolbar>
 
     <Button
         android:id="@+id/search"

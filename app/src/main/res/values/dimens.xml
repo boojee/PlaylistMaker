@@ -17,6 +17,7 @@
     <dimen name="margin_medium">20dp</dimen>
     <dimen name="margin_big">24dp</dimen>
     <dimen name="margin_extra_big">28dp</dimen>
+    <dimen name="margin_extra_extra_big">36dp</dimen>
     <dimen name="margin_large">50dp</dimen>
     <dimen name="margin_extra_large">52dp</dimen>
     <dimen name="margin_huge">96dp</dimen>

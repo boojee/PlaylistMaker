@@ -19,4 +19,6 @@
     <string name="no_internet_description">Загрузка не удалась. Проверьте подключение к интернету</string>
     <string name="something_wrong">Что-то пошло не так</string>
     <string name="refresh">Обновить</string>
+    <string name="clear_search_history">Очистить историю</string>
+    <string name="search_history">Вы искали</string>
 </resources>
