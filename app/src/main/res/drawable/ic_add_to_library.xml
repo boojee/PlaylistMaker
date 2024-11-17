@@ -1,0 +1,16 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="51dp"
+    android:height="51dp"
+    android:viewportWidth="51"
+    android:viewportHeight="51">
+    <path
+        android:fillColor="@color/player_additional_buttons"
+        android:pathData="M25.5,0.5L25.5,0.5A25,25 0,0 1,50.5 25.5L50.5,25.5A25,25 0,0 1,25.5 50.5L25.5,50.5A25,25 0,0 1,0.5 25.5L0.5,25.5A25,25 0,0 1,25.5 0.5z" />
+    <group>
+        <clip-path android:pathData="M25.5,0.5L25.5,0.5A25,25 0,0 1,50.5 25.5L50.5,25.5A25,25 0,0 1,25.5 50.5L25.5,50.5A25,25 0,0 1,0.5 25.5L0.5,25.5A25,25 0,0 1,25.5 0.5z" />
+        <path
+            android:fillColor="@color/color_white"
+            android:fillType="nonZero"
+            android:pathData="M16.29,18.6L14,18.6L14,34.7C14,35.96 15.03,37 16.29,37L32.4,37L32.4,34.7L16.29,34.7L16.29,18.6ZM34.7,14L20.9,14C19.63,14 18.6,15.03 18.6,16.29L18.6,30.1C18.6,31.36 19.63,32.4 20.9,32.4L34.7,32.4C35.96,32.4 37,31.36 37,30.1L37,16.29C37,15.03 35.96,14 34.7,14ZM33.55,24.35L28.95,24.35L28.95,28.95L26.65,28.95L26.65,24.35L22.05,24.35L22.05,22.05L26.65,22.05L26.65,17.45L28.95,17.45L28.95,22.05L33.55,22.05L33.55,24.35Z" />
+    </group>
+</vector>

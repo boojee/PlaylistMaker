@@ -10,4 +10,6 @@
     <color name="track_title">@color/color_white</color>
     <color name="track_artist_and_timing">@color/color_white</color>
     <color name="icon_search_error">@color/color_white</color>
+    <color name="player_additional_buttons">#40FFFFFF</color>
+    <color name="player_play_button">@color/color_white</color>
 </resources>
