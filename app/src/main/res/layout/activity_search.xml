@@ -83,10 +83,10 @@
             style="@style/TextViewSearch"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_extra_extra_big"
+            android:layout_marginTop="@dimen/margin_extra_biggest"
             android:layout_marginBottom="@dimen/margin_medium"
             android:text="@string/search_history"
-            android:visibility="gone"/>
+            android:visibility="gone" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler_view_search"
@@ -95,7 +95,7 @@
             android:layout_weight="1"
             android:visibility="visible"
             tools:itemCount="3"
-            tools:listitem="@layout/music_list_item"/>
+            tools:listitem="@layout/music_list_item" />
 
         <Button
             android:id="@+id/button_clear_search_history"
@@ -104,7 +104,7 @@
             android:layout_height="wrap_content"
             android:layout_marginVertical="@dimen/margin_normal"
             android:text="@string/clear_search_history"
-            android:visibility="gone"/>
+            android:visibility="gone" />
     </LinearLayout>
 
     <LinearLayout
@@ -147,6 +147,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin_big"
-            android:text="@string/refresh"/>
+            android:text="@string/refresh" />
     </LinearLayout>
 </LinearLayout>

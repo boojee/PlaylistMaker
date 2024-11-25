@@ -18,4 +18,6 @@
     <color name="track_title">@color/color_eerie_black</color>
     <color name="track_artist_and_timing">@color/color_silver_foil</color>
     <color name="icon_search_error">@color/color_eerie_black</color>
+    <color name="player_additional_buttons">#401A1B22</color>
+    <color name="player_play_button">@color/color_eerie_black</color>
 </resources>

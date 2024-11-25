@@ -1,6 +1,7 @@
 package com.go.playlistmaker
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -156,8 +157,23 @@ class SearchActivity : AppCompatActivity() {
     private fun initRecyclerView() {
         recyclerView?.layoutManager = LinearLayoutManager(this)
         trackAdapter = TrackAdapter { track ->
+
+            val audioPlayerIntent = Intent(this, AudioPlayerActivity::class.java)
+            val bundle = Bundle().apply {
+                putString("TRACK_NAME", track.trackName)
+                putString("ARTIST_NAME", track.artistName)
+                putLong("TRACK_TIME", track.trackTimeMillis)
+                putString("ARTWORK_URL", track.artworkUrl100)
+                putString("COLLECTION_NAME", track.collectionName)
+                putString("RELEASE_DATE", track.releaseDate)
+                putString("PRIMARY_GENRE_NAME", track.primaryGenreName)
+                putString("COUNTRY", track.country)
+            }
+
+            audioPlayerIntent.putExtras(bundle)
+            startActivity(audioPlayerIntent)
+
             searchHistory?.addTrack(track)
-            Toast.makeText(this, "Трек добавлен в историю", Toast.LENGTH_SHORT).show()
             if (searchTextViewForHistory?.isVisible == true) {
                 trackAdapter?.setItems(searchHistory?.getHistory() ?: emptyList())
                 trackAdapter?.notifyDataSetChanged()

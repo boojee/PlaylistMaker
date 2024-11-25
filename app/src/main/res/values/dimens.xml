@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="text_size_small">11sp</dimen>
+    <dimen name="text_size_normal">13sp</dimen>
     <dimen name="text_size_little">14sp</dimen>
     <dimen name="text_size_default">16sp</dimen>
     <dimen name="text_size_medium">19sp</dimen>
@@ -17,7 +18,9 @@
     <dimen name="margin_medium">20dp</dimen>
     <dimen name="margin_big">24dp</dimen>
     <dimen name="margin_extra_big">28dp</dimen>
-    <dimen name="margin_extra_extra_big">36dp</dimen>
+    <dimen name="margin_biggest">30dp</dimen>
+    <dimen name="margin_extra_biggest">36dp</dimen>
+    <dimen name="margin_extra_extra_biggest">38dp</dimen>
     <dimen name="margin_large">50dp</dimen>
     <dimen name="margin_extra_large">52dp</dimen>
     <dimen name="margin_huge">96dp</dimen>

@@ -9,6 +9,8 @@ private const val MAX_HISTORY_SIZE = 10
 
 class SearchHistory(private val sharedPreferences: SharedPreferences) {
 
+    private val gson = Gson()
+
     fun addTrack(track: Track) {
         val history = getHistory().toMutableList()
 
@@ -33,11 +35,11 @@ class SearchHistory(private val sharedPreferences: SharedPreferences) {
     }
 
     private fun serializeHistory(history: List<Track>): String {
-        return Gson().toJson(history)
+        return gson.toJson(history)
     }
 
     private fun deserializeHistory(historyString: String): List<Track> {
         val type = object : TypeToken<List<Track>>() {}.type
-        return Gson().fromJson(historyString, type)
+        return gson.fromJson(historyString, type)
     }
 }
