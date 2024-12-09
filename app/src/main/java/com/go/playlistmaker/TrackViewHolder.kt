@@ -28,5 +28,7 @@ class TrackViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
             .centerCrop()
             .transform(RoundedCorners(10))
             .into(albumIcon)
+
+        artistName.requestLayout()
     }
 }
