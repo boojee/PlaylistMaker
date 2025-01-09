@@ -1,4 +1,4 @@
-package com.go.playlistmaker
+package com.go.playlistmaker.presentation.activities
 
 import android.content.Intent
 import android.net.Uri
@@ -9,9 +9,15 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.go.playlistmaker.App
+import com.go.playlistmaker.Creator
+import com.go.playlistmaker.R
+import com.go.playlistmaker.domain.api.SettingsInteractor
 import com.google.android.material.switchmaterial.SwitchMaterial
 
 class SettingsActivity : AppCompatActivity() {
+
+    private var settingsInteractor: SettingsInteractor? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,6 +34,8 @@ class SettingsActivity : AppCompatActivity() {
         val buttonSupport = findViewById<TextView>(R.id.button_support)
         val buttonUserAgreement = findViewById<TextView>(R.id.button_users_agreement)
         val themeSwitcher = findViewById<SwitchMaterial>(R.id.themeSwitcher)
+
+        settingsInteractor = Creator.provideSettingsInteractor()
 
         buttonBackward.setOnClickListener {
             finish()
@@ -48,7 +56,7 @@ class SettingsActivity : AppCompatActivity() {
         themeSwitcher.isChecked = (application as App).darkTheme
 
         themeSwitcher.setOnCheckedChangeListener { switcher, checked ->
-            (applicationContext as App).switchTheme(checked)
+            settingsInteractor?.switchTheme(checked)
         }
     }
 

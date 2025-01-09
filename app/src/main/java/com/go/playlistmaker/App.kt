@@ -2,10 +2,8 @@ package com.go.playlistmaker
 
 import android.app.Application
 import androidx.appcompat.app.AppCompatDelegate
-
-const val PLAYLIST_MAKER_PREFERENCES = "playlist_maker_preferences"
-const val LIGHT_THEME_KEY = "light"
-const val DARK_THEME_KEY = "dark"
+import com.go.playlistmaker.common.DARK_THEME_KEY
+import com.go.playlistmaker.common.LIGHT_THEME_KEY
 
 class App : Application() {
 
@@ -15,7 +13,9 @@ class App : Application() {
     override fun onCreate() {
         super.onCreate()
 
-        val sharedPreferences = getSharedPreferences(PLAYLIST_MAKER_PREFERENCES, MODE_PRIVATE)
+        Creator.initApplication(this)
+
+        val sharedPreferences = Creator.provideSharedPreferences()
         val savedTheme = sharedPreferences.getString(LIGHT_THEME_KEY, LIGHT_THEME_KEY)
         darkTheme = savedTheme == DARK_THEME_KEY
         switchTheme(darkTheme)
@@ -31,9 +31,8 @@ class App : Application() {
             }
         )
 
-        getSharedPreferences(PLAYLIST_MAKER_PREFERENCES, MODE_PRIVATE).edit()
+        Creator.provideSharedPreferences().edit()
             .putString(LIGHT_THEME_KEY, if (darkThemeEnabled) DARK_THEME_KEY else LIGHT_THEME_KEY)
             .apply()
     }
 }
-
