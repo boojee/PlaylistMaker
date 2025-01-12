@@ -1,14 +1,17 @@
 package com.go.playlistmaker.data.localdata
 
 import android.content.SharedPreferences
-import com.go.playlistmaker.common.HISTORY_KEY
-import com.go.playlistmaker.common.MAX_HISTORY_SIZE
 import com.go.playlistmaker.data.SearchHistory
 import com.go.playlistmaker.domain.models.Track
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 
 class SearchHistoryImpl(private val sharedPreferences: SharedPreferences) : SearchHistory {
+
+    companion object {
+        private const val HISTORY_KEY = "search_history"
+        private const val MAX_HISTORY_SIZE = 10
+    }
 
     private val gson = Gson()
 

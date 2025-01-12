@@ -1,7 +1,7 @@
 package com.go.playlistmaker.domain.api
 
 interface AudioPlayerInteractor {
-    fun preparePlayer(previewUrl: String)
+    fun preparePlayer(previewUrl: String, onCompletion: () -> Unit)
     fun startPlayer(callback: TimeUpdateCallback)
     fun pausePlayer()
     fun release()

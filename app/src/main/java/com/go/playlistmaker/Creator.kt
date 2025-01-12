@@ -3,7 +3,6 @@ package com.go.playlistmaker
 import android.app.Application
 import android.content.Context
 import android.content.SharedPreferences
-import com.go.playlistmaker.common.PLAYLIST_MAKER_PREFERENCES
 import com.go.playlistmaker.common.SEARCH_HISTORY_KEY
 import com.go.playlistmaker.data.AudioPlayerRepositoryImpl
 import com.go.playlistmaker.data.SettingsRepositoryImpl
@@ -23,6 +22,8 @@ import com.go.playlistmaker.domain.impl.TrackInteractorImpl
 
 object Creator {
     private lateinit var application: Application
+
+    private const val PLAYLIST_MAKER_PREFERENCES = "playlist_maker_preferences"
 
     private fun getTrackRepository(): TrackRepository {
         return TrackRepositoryImpl(

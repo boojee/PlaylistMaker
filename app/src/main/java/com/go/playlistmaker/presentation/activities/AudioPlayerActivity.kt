@@ -80,8 +80,13 @@ class AudioPlayerActivity : AppCompatActivity() {
         audioPlayerInteractor = Creator.provideAudioPlayerInteractor()
 
         previewUrl?.let {
-            audioPlayerInteractor.preparePlayer(it)
-            playerState = STATE_PREPARED
+            audioPlayerInteractor.preparePlayer(it) {
+                runOnUiThread {
+                    playerState = STATE_PREPARED
+                    playbackTimeView?.text = DEFAULT_TRACK_TIME
+                    buttonPlayView?.setImageDrawable(getDrawable(R.drawable.ic_play))
+                }
+            }
         }
 
         trackNameView = findViewById<TextView?>(R.id.track_name).apply {

@@ -8,8 +8,8 @@ class AudioPlayerInteractorImpl(private val audioPlayerRepository: AudioPlayerRe
     AudioPlayerInteractor {
     private var executor = Executors.newCachedThreadPool()
 
-    override fun preparePlayer(previewUrl: String) {
-        audioPlayerRepository.preparePlayer(previewUrl)
+    override fun preparePlayer(previewUrl: String, onCompletion: () -> Unit) {
+        audioPlayerRepository.preparePlayer(previewUrl, onCompletion)
     }
 
     override fun startPlayer(callback: AudioPlayerInteractor.TimeUpdateCallback) {

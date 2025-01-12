@@ -25,8 +25,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.go.playlistmaker.Creator
 import com.go.playlistmaker.Creator.getSearchHistory
 import com.go.playlistmaker.R
-import com.go.playlistmaker.common.CLICK_DEBOUNCE_DELAY
-import com.go.playlistmaker.common.SEARCH_DEBOUNCE_DELAY
 import com.go.playlistmaker.common.SEARCH_HISTORY_KEY
 import com.go.playlistmaker.domain.models.Track
 import com.go.playlistmaker.data.SearchHistory
@@ -34,6 +32,11 @@ import com.go.playlistmaker.domain.api.TrackInteractor
 import com.go.playlistmaker.presentation.adapters.TrackAdapter
 
 class SearchActivity : AppCompatActivity() {
+
+    companion object {
+        private const val CLICK_DEBOUNCE_DELAY = 2000L
+        private const val SEARCH_DEBOUNCE_DELAY = 2000L
+    }
 
     private var editTextSearch: EditText? = null
     private var buttonClear: ImageView? = null

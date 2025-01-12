@@ -2,10 +2,13 @@ package com.go.playlistmaker
 
 import android.app.Application
 import androidx.appcompat.app.AppCompatDelegate
-import com.go.playlistmaker.common.DARK_THEME_KEY
-import com.go.playlistmaker.common.LIGHT_THEME_KEY
 
 class App : Application() {
+
+    companion object {
+        const val LIGHT_THEME_KEY = "light"
+        const val DARK_THEME_KEY = "dark"
+    }
 
     var darkTheme = false
         private set

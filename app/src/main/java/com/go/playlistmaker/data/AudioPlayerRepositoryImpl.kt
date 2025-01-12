@@ -13,9 +13,16 @@ class AudioPlayerRepositoryImpl : AudioPlayerRepository {
     private var updateRunnable: Runnable? = null
     private var isUpdatingTime = false
 
-    override fun preparePlayer(previewUrl: String) {
+    override fun preparePlayer(previewUrl: String, onCompletion: () -> Unit) {
         mediaPlayer.setDataSource(previewUrl)
         mediaPlayer.prepareAsync()
+        mediaPlayer.setOnPreparedListener {
+            onCompletion()
+        }
+        mediaPlayer.setOnCompletionListener {
+            stopUpdatingTime()
+            onCompletion()
+        }
     }
 
     override fun startPlayer(callback: AudioPlayerRepository.TimeUpdateCallback) {
