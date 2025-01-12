@@ -3,6 +3,7 @@ package com.go.playlistmaker
 import android.app.Application
 import android.content.Context
 import android.content.SharedPreferences
+import android.media.MediaPlayer
 import com.go.playlistmaker.common.SEARCH_HISTORY_KEY
 import com.go.playlistmaker.data.AudioPlayerRepositoryImpl
 import com.go.playlistmaker.data.SettingsRepositoryImpl
@@ -40,7 +41,7 @@ object Creator {
     }
 
     private fun getAudioPlayerRepository(): AudioPlayerRepository {
-        return AudioPlayerRepositoryImpl()
+        return AudioPlayerRepositoryImpl(MediaPlayer())
     }
 
     fun provideTrackInteractor(): TrackInteractor {

@@ -7,8 +7,7 @@ import com.go.playlistmaker.domain.api.AudioPlayerRepository
 import java.text.SimpleDateFormat
 import java.util.Locale
 
-class AudioPlayerRepositoryImpl : AudioPlayerRepository {
-    private var mediaPlayer = MediaPlayer()
+class AudioPlayerRepositoryImpl(private val mediaPlayer: MediaPlayer) : AudioPlayerRepository {
     private val handler = Handler(Looper.getMainLooper())
     private var updateRunnable: Runnable? = null
     private var isUpdatingTime = false
