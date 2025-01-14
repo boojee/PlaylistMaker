@@ -1,47 +1,48 @@
-package com.go.playlistmaker
+package com.go.playlistmaker.presentation.activities
 
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.View
 import android.view.inputmethod.EditorInfo
+import android.view.inputmethod.InputMethodManager
+import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
+import android.widget.LinearLayout
+import android.widget.ProgressBar
+import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import android.view.inputmethod.InputMethodManager
-import android.widget.Button
-import android.widget.LinearLayout
-import android.widget.ProgressBar
-import android.widget.TextView
-import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
-
-private const val SEARCH_HISTORY_KEY = "search_history"
-private const val CLICK_DEBOUNCE_DELAY = 2000L
-private const val SEARCH_DEBOUNCE_DELAY = 2000L
+import com.go.playlistmaker.Creator
+import com.go.playlistmaker.Creator.getSearchHistory
+import com.go.playlistmaker.R
+import com.go.playlistmaker.common.SEARCH_HISTORY_KEY
+import com.go.playlistmaker.domain.models.Track
+import com.go.playlistmaker.data.SearchHistory
+import com.go.playlistmaker.domain.api.TrackInteractor
+import com.go.playlistmaker.presentation.adapters.TrackAdapter
 
 class SearchActivity : AppCompatActivity() {
+
+    companion object {
+        private const val CLICK_DEBOUNCE_DELAY = 2000L
+        private const val SEARCH_DEBOUNCE_DELAY = 2000L
+    }
 
     private var editTextSearch: EditText? = null
     private var buttonClear: ImageView? = null
     private var editTextContent: String? = null
     private var buttonBackward: ImageView? = null
     private var recyclerView: RecyclerView? = null
-    private val itunesRetrofit: ItunesRetrofit = ItunesRetrofit()
-    private val itunesService: ItunesApi = itunesRetrofit.provideRetrofit()
     private val musicList: MutableList<Track> = mutableListOf()
     private var trackAdapter: TrackAdapter? = null
     private var errorTitle: TextView? = null
@@ -63,6 +64,8 @@ class SearchActivity : AppCompatActivity() {
         findMusic(editTextSearch?.text.toString())
     }
 
+    private var trackInteractor: TrackInteractor? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -73,6 +76,8 @@ class SearchActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+
+        trackInteractor = Creator.provideTrackInteractor()
 
         editTextSearch = findViewById(R.id.edit_text_search)
         buttonClear = findViewById(R.id.button_clear)
@@ -89,8 +94,8 @@ class SearchActivity : AppCompatActivity() {
 
         initRecyclerView()
 
-        val sharedPreferences = getSharedPreferences(SEARCH_HISTORY_KEY, Context.MODE_PRIVATE)
-        searchHistory = SearchHistory(sharedPreferences)
+        val sharedPreferences = getSharedPreferences(SEARCH_HISTORY_KEY, MODE_PRIVATE)
+        searchHistory = getSearchHistory(sharedPreferences)
 
         buttonBackward?.setOnClickListener {
             finish()
@@ -135,7 +140,6 @@ class SearchActivity : AppCompatActivity() {
 
         editTextSearch?.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
-                Log.i("findMusicTest", "editTextSearch")
                 findMusic(editTextSearch?.text.toString())
                 true
             }
@@ -152,7 +156,6 @@ class SearchActivity : AppCompatActivity() {
 
         buttonRefresh?.setOnClickListener {
             if (isLastRequestFailed && lastSearchQuery != null) {
-                Log.i("findMusicTest", "buttonRefresh")
                 findMusic(lastSearchQuery!!)
             }
         }
@@ -179,7 +182,7 @@ class SearchActivity : AppCompatActivity() {
                 val bundle = Bundle().apply {
                     putString("TRACK_NAME", track.trackName)
                     putString("ARTIST_NAME", track.artistName)
-                    putLong("TRACK_TIME", track.trackTimeMillis)
+                    putString("TRACK_TIME", track.trackTimeMillis)
                     putString("ARTWORK_URL", track.artworkUrl100)
                     putString("COLLECTION_NAME", track.collectionName)
                     putString("RELEASE_DATE", track.releaseDate)
@@ -191,10 +194,17 @@ class SearchActivity : AppCompatActivity() {
                 audioPlayerIntent.putExtras(bundle)
                 startActivity(audioPlayerIntent)
 
-                searchHistory?.addTrack(track)
+                trackInteractor?.addMusicHistory(track)
                 if (searchTextViewForHistory?.isVisible == true) {
-                    trackAdapter?.setItems(searchHistory?.getHistory() ?: emptyList())
-                    trackAdapter?.notifyDataSetChanged()
+                    trackInteractor?.findMusicHistory(object :
+                        TrackInteractor.TrackConsumerHistory {
+                        override fun consume(foundMusic: List<Track>) {
+                            runOnUiThread {
+                                trackAdapter?.setItems(foundMusic)
+                                trackAdapter?.notifyDataSetChanged()
+                            }
+                        }
+                    })
                 }
             }
         }
@@ -207,48 +217,49 @@ class SearchActivity : AppCompatActivity() {
         lastSearchQuery = text
         progressBar?.isVisible = true
 
-        itunesService.findMusic(text).enqueue(object : Callback<TrackResponse> {
-            override fun onResponse(
-                call: Call<TrackResponse>, response: Response<TrackResponse>
-            ) {
-                progressBar?.isVisible = false
+        musicList.clear()
 
-                if (response.code() == 200) {
-                    musicList.clear()
-                    if (response.body()?.results?.isNotEmpty() == true) {
-                        musicList.addAll(response.body()?.results ?: listOf())
-                        trackAdapter?.setItems(musicList)
-                        trackAdapter?.notifyDataSetChanged()
-                        recyclerView?.isVisible = true
-                        searchPlaceholder?.isVisible = false
-                        isLastRequestFailed = false
-                    } else {
-                        recyclerView?.isVisible = false
-                        searchPlaceholder?.isVisible = true
-                        errorTitle?.text = getString(R.string.nothing_found)
-                        errorDescription?.isVisible = false
-                        buttonRefresh?.isVisible = false
-                        errorIcon?.setImageDrawable(getDrawable(R.drawable.ic_nothing_found))
+        trackInteractor?.findMusic(
+            lastSearchQuery.orEmpty(),
+            object : TrackInteractor.TrackConsumer {
+                override fun consume(foundMusic: List<Track>) {
+                    runOnUiThread {
+                        progressBar?.isVisible = false
+                        if (foundMusic.isNotEmpty()) {
+                            musicList.addAll(foundMusic)
+                            trackAdapter?.setItems(musicList)
+                            trackAdapter?.notifyDataSetChanged()
+                            recyclerView?.isVisible = true
+                            searchPlaceholder?.isVisible = false
+                            isLastRequestFailed = false
+                        } else {
+                            recyclerView?.isVisible = false
+                            searchPlaceholder?.isVisible = true
+                            errorTitle?.text = getString(R.string.nothing_found)
+                            errorDescription?.isVisible = false
+                            buttonRefresh?.isVisible = false
+                            errorIcon?.setImageDrawable(getDrawable(R.drawable.ic_nothing_found))
+                        }
                     }
-                } else {
-                    progressBar?.isVisible = false
-                    Toast.makeText(
-                        applicationContext, getString(R.string.something_wrong), Toast.LENGTH_LONG
-                    ).show()
                 }
-            }
+            })
+        //TODO Обработать кейс когда изучим обработку ошибок в архитектуре
+//        progressBar?.isVisible = false
+//        Toast.makeText(
+//            applicationContext, getString(R.string.something_wrong), Toast.LENGTH_LONG
+//        ).show()
 
-            override fun onFailure(call: Call<TrackResponse>, t: Throwable) {
-                progressBar?.isVisible = false
-                recyclerView?.isVisible = false
-                searchPlaceholder?.isVisible = true
-                errorTitle?.text = getString(R.string.no_internet_title)
-                errorDescription?.isVisible = true
-                buttonRefresh?.isVisible = true
-                isLastRequestFailed = true
-                errorIcon?.setImageDrawable(getDrawable(R.drawable.ic_no_internet))
-            }
-        })
+//            override fun onFailure(call: Call<TrackSearchResponse>, t: Throwable) {
+//                progressBar?.isVisible = false
+//                recyclerView?.isVisible = false
+//                searchPlaceholder?.isVisible = true
+//                errorTitle?.text = getString(R.string.no_internet_title)
+//                errorDescription?.isVisible = true
+//                buttonRefresh?.isVisible = true
+//                isLastRequestFailed = true
+//                errorIcon?.setImageDrawable(getDrawable(R.drawable.ic_no_internet))
+//            }
+//        })
     }
 
     private fun displaySearchHistory() {
@@ -266,7 +277,7 @@ class SearchActivity : AppCompatActivity() {
 
     private fun hideKeyboard() {
         if (editTextSearch != null) {
-            (getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager).hideSoftInputFromWindow(
+            (getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager).hideSoftInputFromWindow(
                 editTextSearch!!.windowToken, 0
             )
         }

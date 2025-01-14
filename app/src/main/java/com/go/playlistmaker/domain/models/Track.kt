@@ -1,10 +1,10 @@
-package com.go.playlistmaker
+package com.go.playlistmaker.domain.models
 
 data class Track(
     val trackId: Long,
     val trackName: String,
     val artistName: String,
-    val trackTimeMillis: Long,
+    val trackTimeMillis: String,
     val artworkUrl100: String,
     val collectionName: String,
     val releaseDate: String,

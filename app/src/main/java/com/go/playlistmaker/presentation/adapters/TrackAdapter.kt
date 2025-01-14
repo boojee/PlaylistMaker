@@ -1,10 +1,13 @@
-package com.go.playlistmaker
+package com.go.playlistmaker.presentation.adapters
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.go.playlistmaker.R
+import com.go.playlistmaker.domain.models.Track
 
-class TrackAdapter(private val onTrackClick: (Track) -> Unit): RecyclerView.Adapter<TrackViewHolder> () {
+class TrackAdapter(private val onTrackClick: (Track) -> Unit) :
+    RecyclerView.Adapter<TrackViewHolder>() {
 
     private var tracks: List<Track> = mutableListOf()
 
@@ -14,7 +17,8 @@ class TrackAdapter(private val onTrackClick: (Track) -> Unit): RecyclerView.Adap
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TrackViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.music_list_item, parent, false)
+        val view =
+            LayoutInflater.from(parent.context).inflate(R.layout.music_list_item, parent, false)
         return TrackViewHolder(view)
     }
 

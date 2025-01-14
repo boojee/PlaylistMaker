@@ -1,17 +1,21 @@
-package com.go.playlistmaker
+package com.go.playlistmaker.data.localdata
 
 import android.content.SharedPreferences
+import com.go.playlistmaker.data.SearchHistory
+import com.go.playlistmaker.domain.models.Track
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 
-private const val HISTORY_KEY = "search_history"
-private const val MAX_HISTORY_SIZE = 10
+class SearchHistoryImpl(private val sharedPreferences: SharedPreferences) : SearchHistory {
 
-class SearchHistory(private val sharedPreferences: SharedPreferences) {
+    companion object {
+        private const val HISTORY_KEY = "search_history"
+        private const val MAX_HISTORY_SIZE = 10
+    }
 
     private val gson = Gson()
 
-    fun addTrack(track: Track) {
+    override fun addTrack(track: Track) {
         val history = getHistory().toMutableList()
 
         history.removeIf { it.trackId == track.trackId }
@@ -25,12 +29,12 @@ class SearchHistory(private val sharedPreferences: SharedPreferences) {
         sharedPreferences.edit().putString(HISTORY_KEY, serializeHistory(history)).apply()
     }
 
-    fun getHistory(): List<Track> {
+    override fun getHistory(): List<Track> {
         val historyString = sharedPreferences.getString(HISTORY_KEY, null) ?: return emptyList()
         return deserializeHistory(historyString)
     }
 
-    fun clearHistory() {
+    override fun clearHistory() {
         sharedPreferences.edit().remove(HISTORY_KEY).apply()
     }
 

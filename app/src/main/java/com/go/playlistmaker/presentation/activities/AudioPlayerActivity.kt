@@ -1,9 +1,6 @@
-package com.go.playlistmaker
+package com.go.playlistmaker.presentation.activities
 
-import android.os.Handler
-import android.media.MediaPlayer
 import android.os.Bundle
-import android.os.Looper
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
@@ -13,11 +10,11 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
-import java.text.SimpleDateFormat
+import com.go.playlistmaker.Creator
+import com.go.playlistmaker.R
+import com.go.playlistmaker.domain.api.AudioPlayerInteractor
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
-import java.util.Date
-import java.util.Locale
 
 class AudioPlayerActivity : AppCompatActivity() {
 
@@ -31,7 +28,7 @@ class AudioPlayerActivity : AppCompatActivity() {
     }
 
     private var playerState = STATE_DEFAULT
-    private var mediaPlayer = MediaPlayer()
+    private lateinit var audioPlayerInteractor: AudioPlayerInteractor
 
     private var buttonBackward: ImageView? = null
     private var trackNameView: TextView? = null
@@ -47,7 +44,7 @@ class AudioPlayerActivity : AppCompatActivity() {
 
     private var trackName: String? = null
     private var artistName: String? = null
-    private var trackTimeMillis: Long? = null
+    private var trackTimeMillis: String? = null
     private var artworkUrl100: String? = null
     private var collectionName: String? = null
     private var releaseDate: String? = null
@@ -55,9 +52,6 @@ class AudioPlayerActivity : AppCompatActivity() {
     private var country: String? = null
     private var previewUrl: String? = null
     private var playbackTime: String? = null
-
-    private val handler = Handler(Looper.getMainLooper())
-    private var updateRunnable: Runnable? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -68,7 +62,7 @@ class AudioPlayerActivity : AppCompatActivity() {
         if (intent != null) {
             trackName = intent.getString("TRACK_NAME")
             artistName = intent.getString("ARTIST_NAME")
-            trackTimeMillis = intent.getLong("TRACK_TIME")
+            trackTimeMillis = intent.getString("TRACK_TIME")
             artworkUrl100 = intent.getString("ARTWORK_URL")
             collectionName = intent.getString("COLLECTION_NAME")
             releaseDate = intent.getString("RELEASE_DATE")
@@ -83,6 +77,18 @@ class AudioPlayerActivity : AppCompatActivity() {
             insets
         }
 
+        audioPlayerInteractor = Creator.provideAudioPlayerInteractor()
+
+        previewUrl?.let {
+            audioPlayerInteractor.preparePlayer(it) {
+                runOnUiThread {
+                    playerState = STATE_PREPARED
+                    playbackTimeView?.text = DEFAULT_TRACK_TIME
+                    buttonPlayView?.setImageDrawable(getDrawable(R.drawable.ic_play))
+                }
+            }
+        }
+
         trackNameView = findViewById<TextView?>(R.id.track_name).apply {
             text = trackName
         }
@@ -90,7 +96,7 @@ class AudioPlayerActivity : AppCompatActivity() {
             text = artistName
         }
         trackTimeView = findViewById<TextView?>(R.id.track_time).apply {
-            text = SimpleDateFormat("mm:ss", Locale.getDefault()).format(Date(trackTimeMillis ?: 0))
+            text = trackTimeMillis
         }
         albumCoverView = findViewById<ImageView?>(R.id.album_cover).apply {
             Glide.with(this)
@@ -126,8 +132,6 @@ class AudioPlayerActivity : AppCompatActivity() {
 
         buttonPlayView = findViewById(R.id.play_button)
 
-        preparePlayer()
-
         buttonPlayView?.setOnClickListener {
             playbackControl()
         }
@@ -135,69 +139,34 @@ class AudioPlayerActivity : AppCompatActivity() {
 
     override fun onPause() {
         super.onPause()
-        pausePlayer()
+        audioPlayerInteractor.pausePlayer()
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        mediaPlayer.release()
-        stopUpdatingTime()
+        audioPlayerInteractor.release()
     }
 
     private fun playbackControl() {
         when (playerState) {
             STATE_PLAYING -> {
-                pausePlayer()
+                playerState = STATE_PAUSED
+                audioPlayerInteractor.pausePlayer()
+                buttonPlayView?.setImageDrawable(getDrawable(R.drawable.ic_play))
             }
 
             STATE_PREPARED, STATE_PAUSED -> {
-                startPlayer()
+                playerState = STATE_PLAYING
+                audioPlayerInteractor.startPlayer(object :
+                    AudioPlayerInteractor.TimeUpdateCallback {
+                    override fun updatePlaybackTime(time: String) {
+                        runOnUiThread {
+                            playbackTimeView?.text = time
+                        }
+                    }
+                })
+                buttonPlayView?.setImageDrawable(getDrawable(R.drawable.ic_pause))
             }
         }
-    }
-
-    private fun preparePlayer() {
-        mediaPlayer.setDataSource(previewUrl)
-        mediaPlayer.prepareAsync()
-        mediaPlayer.setOnPreparedListener {
-            buttonPlayView?.isEnabled = true
-            playerState = STATE_PREPARED
-        }
-        mediaPlayer.setOnCompletionListener {
-            playerState = STATE_PREPARED
-            buttonPlayView?.setImageDrawable(getDrawable(R.drawable.ic_play))
-            playbackTimeView?.text = DEFAULT_TRACK_TIME
-            stopUpdatingTime()
-        }
-    }
-
-    private fun startPlayer() {
-        mediaPlayer.start()
-        buttonPlayView?.setImageDrawable(getDrawable(R.drawable.ic_pause))
-        playerState = STATE_PLAYING
-        startUpdatingTime()
-    }
-
-    private fun pausePlayer() {
-        mediaPlayer.pause()
-        buttonPlayView?.setImageDrawable(getDrawable(R.drawable.ic_play))
-        playerState = STATE_PAUSED
-        stopUpdatingTime()
-    }
-
-    private fun startUpdatingTime() {
-        updateRunnable = Runnable {
-            if (playerState == STATE_PLAYING) {
-                playbackTimeView?.text = SimpleDateFormat("mm:ss", Locale.getDefault())
-                    .format(mediaPlayer.currentPosition)
-                updateRunnable?.let { handler.postDelayed(it, 500) }
-            }
-        }
-        updateRunnable?.let { handler.post(it) }
-    }
-
-    private fun stopUpdatingTime() {
-        updateRunnable?.let { handler.removeCallbacks(it) }
-        updateRunnable = null
     }
 }

@@ -1,10 +1,11 @@
-package com.go.playlistmaker
+package com.go.playlistmaker.presentation.activities
 
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.go.playlistmaker.R
 
 class LibraryActivity : AppCompatActivity() {
 
