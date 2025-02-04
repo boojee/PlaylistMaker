@@ -5,7 +5,7 @@ plugins {
 
 android {
     namespace = "com.go.playlistmaker"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.go.playlistmaker"
@@ -33,6 +33,10 @@ android {
     kotlinOptions {
         jvmTarget = "1.8"
     }
+
+    buildFeatures {
+        viewBinding = true
+    }
 }
 
 dependencies {
@@ -50,4 +54,6 @@ dependencies {
     annotationProcessor (libs.compiler)
     implementation (libs.retrofit)
     implementation (libs.converter.gson)
+    implementation (libs.androidx.lifecycle.viewmodel.ktx.v251)
+    implementation (libs.androidx.activity.ktx)
 }

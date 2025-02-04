@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:background="?attr/colorSecondary"
     android:orientation="vertical"
-    tools:context=".presentation.activities.SearchActivity">
+    tools:context=".searchtrack.ui.SearchActivity">
 
     <com.google.android.material.appbar.MaterialToolbar
         android:layout_width="match_parent"
