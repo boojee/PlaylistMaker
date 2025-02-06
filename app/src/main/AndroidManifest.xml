@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
         android:name=".App"
@@ -16,16 +17,16 @@
         android:theme="@style/Base.Theme.PlaylistMaker"
         tools:targetApi="31">
         <activity
-            android:name=".presentation.activities.AudioPlayerActivity"
+            android:name=".audioplayer.ui.AudioPlayerActivity"
             android:exported="false" />
         <activity
             android:name=".presentation.activities.LibraryActivity"
             android:exported="false" />
         <activity
-            android:name=".presentation.activities.SearchActivity"
+            android:name=".searchtrack.ui.SearchActivity"
             android:exported="false" />
         <activity
-            android:name=".presentation.activities.SettingsActivity"
+            android:name=".settings.ui.SettingsActivity"
             android:exported="false" />
         <activity
             android:name=".presentation.activities.MainActivity"
