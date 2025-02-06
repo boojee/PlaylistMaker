@@ -32,7 +32,6 @@ class AudioPlayerActivity : AppCompatActivity() {
     private var primaryGenreName: String? = null
     private var country: String? = null
     private var previewUrl: String? = null
-    private var playbackTime: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -70,6 +69,7 @@ class AudioPlayerActivity : AppCompatActivity() {
             when (trackState) {
                 TrackState.Prepared -> {
                     binding.playButton.setImageDrawable(getDrawable(R.drawable.ic_play))
+                    binding.playbackTime.text = DEFAULT_TRACK_TIME
                 }
 
                 TrackState.Paused -> {

@@ -74,12 +74,11 @@ class App : Application() {
     }
 
     private fun getTrackRepository(): TrackRepository {
+        val itunesApi = Creator.provideItunesApi()
+        val itunesRetrofit = ItunesRetrofit(this, itunesApi)
         return TrackRepositoryImpl(
-            ItunesRetrofit(this), getSearchHistory(
-                getSharedPreferences(
-                    SEARCH_HISTORY_KEY, Context.MODE_PRIVATE
-                )
-            )
+            itunesRetrofit,
+            getSearchHistory(getSharedPreferences(SEARCH_HISTORY_KEY, Context.MODE_PRIVATE))
         )
     }
 

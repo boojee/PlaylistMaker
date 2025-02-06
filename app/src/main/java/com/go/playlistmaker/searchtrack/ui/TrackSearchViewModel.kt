@@ -1,6 +1,5 @@
 package com.go.playlistmaker.searchtrack.ui
 
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -15,31 +14,25 @@ class TrackSearchViewModel(
     private val trackInteractor: TrackInteractor
 ) : ViewModel() {
 
-    private var loadingLiveData = MutableLiveData(false)
-    private var findMusicLiveData = MutableLiveData<List<Track>>()
-    private var findMusicHistoryLiveData = MutableLiveData<List<Track>>()
-    private var errorMessageLiveData = MutableLiveData<String>()
+    private val searchStateLiveData = MutableLiveData<SearchState>()
 
     init {
         findMusicHistory()
     }
 
-    fun getLoadingLiveData(): LiveData<Boolean> = loadingLiveData
-    fun getFoundMusicLiveData(): LiveData<List<Track>> = findMusicLiveData
-    fun getFoundMusicHistoryLiveData(): LiveData<List<Track>> = findMusicHistoryLiveData
-    fun getErrorMessage(): LiveData<String> = errorMessageLiveData
+    fun getSearchStateLiveData(): MutableLiveData<SearchState> = searchStateLiveData
 
     fun findMusic(query: String) {
-        loadingLiveData.postValue(true)
+        searchStateLiveData.postValue(SearchState.SearchLoading(true))
         trackInteractor.findMusic(
             query,
             object : TrackInteractor.TrackConsumer {
                 override fun consume(foundMusic: List<Track>, errorMessage: String?) {
-                    loadingLiveData.postValue(false)
+                    searchStateLiveData.postValue(SearchState.SearchLoading(false))
                     if (errorMessage != null) {
-                        errorMessageLiveData.postValue(errorMessage.orEmpty())
+                        searchStateLiveData.postValue(SearchState.SearchError(errorMessage))
                     } else {
-                        findMusicLiveData.postValue(foundMusic)
+                        searchStateLiveData.postValue(SearchState.MusicList(foundMusic))
                     }
                 }
             })
@@ -53,7 +46,7 @@ class TrackSearchViewModel(
         trackInteractor.findMusicHistory(object :
             TrackInteractor.TrackConsumerHistory {
             override fun consume(foundMusic: List<Track>) {
-                findMusicHistoryLiveData.postValue(foundMusic)
+                searchStateLiveData.postValue(SearchState.HistoryMusicList(foundMusic))
             }
         })
     }

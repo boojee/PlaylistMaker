@@ -55,17 +55,17 @@ class SearchActivity : AppCompatActivity() {
         binding = ActivitySearchBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        trackSearchViewModel?.getLoadingLiveData()?.observe(this) { isLoading ->
-            binding.progressBar.isVisible = isLoading
-        }
-        trackSearchViewModel?.getFoundMusicLiveData()?.observe(this) { foundMusic ->
-            stateMusicList(foundMusic)
-        }
-        trackSearchViewModel?.getFoundMusicHistoryLiveData()?.observe(this) { foundMusicHistory ->
-            isVisibleHistoryMusicList(foundMusicHistory)
-        }
-        trackSearchViewModel?.getErrorMessage()?.observe(this) { errorMessage ->
-            showErrorMessage(errorMessage)
+        trackSearchViewModel?.getSearchStateLiveData()?.observe(this) { searchState ->
+            when (searchState) {
+                is SearchState.SearchLoading -> {
+                    binding.progressBar.isVisible = searchState.isLoading
+                }
+                is SearchState.MusicList -> stateMusicList(searchState.musicList)
+                is SearchState.HistoryMusicList -> {
+                    isVisibleHistoryMusicList(searchState.musicList)
+                }
+                is SearchState.SearchError -> showErrorMessage(searchState.message)
+            }
         }
 
         ViewCompat.setOnApplyWindowInsetsListener(binding.search) { v, insets ->
@@ -203,6 +203,7 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun stateMusicList(foundMusic: List<Track>) {
+        binding.progressBar.isVisible = false
         if (foundMusic.isNotEmpty()) {
             musicList.addAll(foundMusic)
             trackAdapter?.setItems(musicList)
@@ -240,6 +241,7 @@ class SearchActivity : AppCompatActivity() {
     private fun showErrorMessage(errorMessage: String) {
         Toast.makeText(applicationContext, errorMessage, Toast.LENGTH_LONG).show()
         binding.recyclerViewSearch.isVisible = false
+        binding.progressBar.isVisible = false
         binding.searchPlaceholder.isVisible = true
         binding.errorTitle.text = getString(R.string.no_internet_title)
         binding.errorDescription.isVisible = true

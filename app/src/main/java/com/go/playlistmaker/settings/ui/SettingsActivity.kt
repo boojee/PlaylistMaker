@@ -38,8 +38,12 @@ class SettingsActivity : AppCompatActivity() {
         binding.buttonSupport.setOnClickListener { sendEmailToSupport() }
         binding.buttonUsersAgreement.setOnClickListener { sendUserAgreement() }
 
-        settingsViewModel?.getThemeStateLiveData()?.observe(this) { isDarkTheme ->
-            binding.themeSwitcher.isChecked = isDarkTheme
+        settingsViewModel?.getThemeStateLiveData()?.observe(this) { settingsState ->
+            when(settingsState) {
+                is SettingsState.CurrentTheme -> {
+                    binding.themeSwitcher.isChecked = settingsState.isThemeDark
+                }
+            }
         }
 
         binding.themeSwitcher.setOnCheckedChangeListener { _, checked ->
