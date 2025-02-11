@@ -15,13 +15,13 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.isVisible
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.go.playlistmaker.R
 import com.go.playlistmaker.databinding.ActivitySearchBinding
 import com.go.playlistmaker.searchtrack.domain.models.Track
 import com.go.playlistmaker.audioplayer.ui.AudioPlayerActivity
 import com.go.playlistmaker.searchtrack.ui.adapters.TrackAdapter
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SearchActivity : AppCompatActivity() {
 
@@ -30,7 +30,7 @@ class SearchActivity : AppCompatActivity() {
         private const val SEARCH_DEBOUNCE_DELAY = 2000L
     }
 
-    private var trackSearchViewModel: TrackSearchViewModel? = null
+    private val trackSearchViewModel by viewModel<TrackSearchViewModel>()
     private lateinit var binding: ActivitySearchBinding
 
     private var editTextContent: String? = null
@@ -47,15 +47,11 @@ class SearchActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        trackSearchViewModel = ViewModelProvider(
-            this,
-            TrackSearchViewModel.getViewModelFactory()
-        )[TrackSearchViewModel::class.java]
         enableEdgeToEdge()
         binding = ActivitySearchBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        trackSearchViewModel?.getSearchStateLiveData()?.observe(this) { searchState ->
+        trackSearchViewModel.getSearchStateLiveData().observe(this) { searchState ->
             when (searchState) {
                 is SearchState.SearchLoading -> {
                     binding.progressBar.isVisible = searchState.isLoading
@@ -129,7 +125,7 @@ class SearchActivity : AppCompatActivity() {
 
         binding.editTextSearch.onFocusChangeListener = View.OnFocusChangeListener { _, hasFocus ->
             if (hasFocus && binding.editTextSearch.text.isNullOrEmpty()) {
-                trackSearchViewModel?.findMusicHistory()
+                trackSearchViewModel.findMusicHistory()
                 binding.searchPlaceholder.isVisible = false
             } else {
                 hideSearchHistory()
@@ -143,7 +139,7 @@ class SearchActivity : AppCompatActivity() {
         }
 
         binding.buttonClearSearchHistory.setOnClickListener {
-            trackSearchViewModel?.clearHistory()
+            trackSearchViewModel.clearHistory()
             hideSearchHistory()
         }
 
@@ -173,9 +169,9 @@ class SearchActivity : AppCompatActivity() {
                 audioPlayerIntent.putExtras(bundle)
                 startActivity(audioPlayerIntent)
 
-                trackSearchViewModel?.addMusicHistory(track)
+                trackSearchViewModel.addMusicHistory(track)
                 if (binding.searchTextViewForHistory.isVisible) {
-                    trackSearchViewModel?.findMusicHistory()
+                    trackSearchViewModel.findMusicHistory()
                 }
             }
         }
@@ -188,7 +184,7 @@ class SearchActivity : AppCompatActivity() {
         lastSearchQuery = text
 
         musicList.clear()
-        trackSearchViewModel?.findMusic(lastSearchQuery.orEmpty())
+        trackSearchViewModel.findMusic(lastSearchQuery.orEmpty())
     }
 
     private fun isVisibleHistoryMusicList(foundMusicHistory: List<Track>) {

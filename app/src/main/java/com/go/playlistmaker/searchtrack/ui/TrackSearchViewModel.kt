@@ -2,11 +2,6 @@ package com.go.playlistmaker.searchtrack.ui
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
-import androidx.lifecycle.viewmodel.initializer
-import androidx.lifecycle.viewmodel.viewModelFactory
-import com.go.playlistmaker.App
 import com.go.playlistmaker.searchtrack.domain.api.TrackInteractor
 import com.go.playlistmaker.searchtrack.domain.models.Track
 
@@ -53,17 +48,5 @@ class TrackSearchViewModel(
 
     fun clearHistory() {
         trackInteractor.clearHistory()
-    }
-
-    companion object {
-        fun getViewModelFactory(): ViewModelProvider.Factory = viewModelFactory {
-            initializer {
-                val interactor = (this[APPLICATION_KEY] as App).provideTrackInteractor()
-
-                TrackSearchViewModel(
-                    interactor
-                )
-            }
-        }
     }
 }

@@ -2,26 +2,14 @@ package com.go.playlistmaker
 
 import android.app.Application
 import android.content.Context
-import android.content.SharedPreferences
 import android.content.res.Configuration
-import android.media.MediaPlayer
 import androidx.appcompat.app.AppCompatDelegate
-import com.go.playlistmaker.common.SEARCH_HISTORY_KEY
-import com.go.playlistmaker.audioplayer.data.AudioPlayerRepositoryImpl
-import com.go.playlistmaker.settings.data.SettingsRepositoryImpl
-import com.go.playlistmaker.audioplayer.domain.api.AudioPlayerInteractor
-import com.go.playlistmaker.audioplayer.domain.api.AudioPlayerRepository
-import com.go.playlistmaker.settings.domain.api.SettingsInteractor
-import com.go.playlistmaker.settings.domain.api.SettingsRepository
-import com.go.playlistmaker.audioplayer.domain.impl.AudioPlayerInteractorImpl
-import com.go.playlistmaker.settings.domain.impl.SettingsInteractorImpl
-import com.go.playlistmaker.searchtrack.data.SearchHistory
-import com.go.playlistmaker.searchtrack.data.TrackRepositoryImpl
-import com.go.playlistmaker.searchtrack.data.localdata.SearchHistoryImpl
-import com.go.playlistmaker.searchtrack.data.network.ItunesRetrofit
-import com.go.playlistmaker.searchtrack.domain.api.TrackInteractor
-import com.go.playlistmaker.searchtrack.domain.api.TrackRepository
-import com.go.playlistmaker.searchtrack.domain.impl.TrackInteractorImpl
+import com.go.playlistmaker.di.dataModule
+import com.go.playlistmaker.di.interactorModule
+import com.go.playlistmaker.di.repositoryModule
+import com.go.playlistmaker.di.viewModelModule
+import org.koin.android.ext.koin.androidContext
+import org.koin.core.context.startKoin
 
 class App : Application() {
 
@@ -36,6 +24,11 @@ class App : Application() {
 
     override fun onCreate() {
         super.onCreate()
+
+        startKoin {
+            androidContext(this@App)
+            modules(dataModule, repositoryModule, interactorModule, viewModelModule)
+        }
 
         val sharedPreferences = getSharedPreferences("app_preferences", Context.MODE_PRIVATE)
         val savedTheme = sharedPreferences.getString(THEME_KEY, null)
@@ -59,39 +52,6 @@ class App : Application() {
                 AppCompatDelegate.MODE_NIGHT_NO
             }
         )
-    }
-
-    fun provideTrackInteractor(): TrackInteractor {
-        return TrackInteractorImpl(getTrackRepository())
-    }
-
-    fun provideSettingsInteractor(): SettingsInteractor {
-        return SettingsInteractorImpl(getSettingsRepository())
-    }
-
-    private fun getSettingsRepository(): SettingsRepository {
-        return SettingsRepositoryImpl(this)
-    }
-
-    private fun getTrackRepository(): TrackRepository {
-        val itunesApi = Creator.provideItunesApi()
-        val itunesRetrofit = ItunesRetrofit(this, itunesApi)
-        return TrackRepositoryImpl(
-            itunesRetrofit,
-            getSearchHistory(getSharedPreferences(SEARCH_HISTORY_KEY, Context.MODE_PRIVATE))
-        )
-    }
-
-    private fun getSearchHistory(sharedPreferences: SharedPreferences): SearchHistory {
-        return SearchHistoryImpl(sharedPreferences)
-    }
-
-    fun provideAudioPlayerInteractor(): AudioPlayerInteractor {
-        return AudioPlayerInteractorImpl(getAudioPlayerRepository())
-    }
-
-    private fun getAudioPlayerRepository(): AudioPlayerRepository {
-        return AudioPlayerRepositoryImpl(MediaPlayer())
     }
 
     fun isSystemDarkTheme(): Boolean {

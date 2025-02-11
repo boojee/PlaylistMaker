@@ -7,13 +7,13 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import androidx.lifecycle.ViewModelProvider
 import com.go.playlistmaker.R
 import com.go.playlistmaker.databinding.ActivitySettingsBinding
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SettingsActivity : AppCompatActivity() {
 
-    private var settingsViewModel: SettingsViewModel? = null
+    private val settingsViewModel by viewModel<SettingsViewModel>()
     private lateinit var binding: ActivitySettingsBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -28,17 +28,12 @@ class SettingsActivity : AppCompatActivity() {
             insets
         }
 
-        settingsViewModel = ViewModelProvider(
-            this,
-            SettingsViewModel.getViewModelFactory()
-        )[SettingsViewModel::class.java]
-
         binding.buttonBack.setOnClickListener { finish() }
         binding.buttonShare.setOnClickListener { shareCourse() }
         binding.buttonSupport.setOnClickListener { sendEmailToSupport() }
         binding.buttonUsersAgreement.setOnClickListener { sendUserAgreement() }
 
-        settingsViewModel?.getThemeStateLiveData()?.observe(this) { settingsState ->
+        settingsViewModel.getThemeStateLiveData().observe(this) { settingsState ->
             when(settingsState) {
                 is SettingsState.CurrentTheme -> {
                     binding.themeSwitcher.isChecked = settingsState.isThemeDark
@@ -47,7 +42,7 @@ class SettingsActivity : AppCompatActivity() {
         }
 
         binding.themeSwitcher.setOnCheckedChangeListener { _, checked ->
-            settingsViewModel?.switchTheme(checked)
+            settingsViewModel.switchTheme(checked)
         }
     }
 

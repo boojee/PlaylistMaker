@@ -5,11 +5,11 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.go.playlistmaker.R
 import com.go.playlistmaker.databinding.ActivityAudioPlayerBinding
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
@@ -20,7 +20,7 @@ class AudioPlayerActivity : AppCompatActivity() {
         private const val FORMAT_IMAGE_ALBUM = "512x512bb.jpg"
     }
 
-    private var audioPlayerViewModel: AudioPlayerViewModel? = null
+    private val audioPlayerViewModel by viewModel<AudioPlayerViewModel>()
     private lateinit var binding: ActivityAudioPlayerBinding
 
     private var trackName: String? = null
@@ -58,14 +58,9 @@ class AudioPlayerActivity : AppCompatActivity() {
             insets
         }
 
-        audioPlayerViewModel = ViewModelProvider(
-            this,
-            AudioPlayerViewModel.getViewModelFactory()
-        )[AudioPlayerViewModel::class.java]
+        previewUrl?.let { audioPlayerViewModel.preparePlayer(it) }
 
-        previewUrl?.let { audioPlayerViewModel?.preparePlayer(it) }
-
-        audioPlayerViewModel?.getTrackStateLiveData()?.observe(this) { trackState ->
+        audioPlayerViewModel.getTrackStateLiveData().observe(this) { trackState ->
             when (trackState) {
                 TrackState.Prepared -> {
                     binding.playButton.setImageDrawable(getDrawable(R.drawable.ic_play))
@@ -88,7 +83,8 @@ class AudioPlayerActivity : AppCompatActivity() {
         binding.trackTime.text = trackTimeMillis ?: DEFAULT_TRACK_TIME
         binding.albumCover.apply {
             Glide.with(this)
-                .load(artworkUrl100?.let { it.replaceAfterLast('/', FORMAT_IMAGE_ALBUM) }
+                .load(
+                    artworkUrl100?.replaceAfterLast('/', FORMAT_IMAGE_ALBUM)
                     ?: R.drawable.ic_track_placeholder)
                 .placeholder(R.drawable.ic_track_placeholder)
                 .centerCrop()
@@ -110,16 +106,16 @@ class AudioPlayerActivity : AppCompatActivity() {
         binding.country.text = country ?: ""
         binding.playbackTime.text = DEFAULT_TRACK_TIME
         binding.buttonBack.setOnClickListener { finish() }
-        binding.playButton.setOnClickListener { audioPlayerViewModel?.playbackControl() }
+        binding.playButton.setOnClickListener { audioPlayerViewModel.playbackControl() }
     }
 
     override fun onPause() {
         super.onPause()
-        audioPlayerViewModel?.pausePlayer()
+        audioPlayerViewModel.pausePlayer()
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        audioPlayerViewModel?.release()
+        audioPlayerViewModel.release()
     }
 }

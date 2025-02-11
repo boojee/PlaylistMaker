@@ -2,11 +2,6 @@ package com.go.playlistmaker.audioplayer.ui
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
-import androidx.lifecycle.viewmodel.initializer
-import androidx.lifecycle.viewmodel.viewModelFactory
-import com.go.playlistmaker.App
 import com.go.playlistmaker.audioplayer.domain.api.AudioPlayerInteractor
 
 class AudioPlayerViewModel(private val audioPlayerInteractor: AudioPlayerInteractor) : ViewModel() {
@@ -69,13 +64,5 @@ class AudioPlayerViewModel(private val audioPlayerInteractor: AudioPlayerInterac
         private const val STATE_PLAYING = 2
         private const val STATE_PAUSED = 3
         private const val DEFAULT_TRACK_TIME = "00:00"
-
-        fun getViewModelFactory(): ViewModelProvider.Factory = viewModelFactory {
-            initializer {
-                val audioPlayerInteractor =
-                    (this[APPLICATION_KEY] as App).provideAudioPlayerInteractor()
-                AudioPlayerViewModel(audioPlayerInteractor)
-            }
-        }
     }
 }
