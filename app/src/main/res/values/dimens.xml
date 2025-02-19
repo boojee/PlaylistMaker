@@ -21,9 +21,11 @@
     <dimen name="margin_biggest">30dp</dimen>
     <dimen name="margin_extra_biggest">36dp</dimen>
     <dimen name="margin_extra_extra_biggest">38dp</dimen>
+    <dimen name="margin_small_large">46dp</dimen>
     <dimen name="margin_large">50dp</dimen>
     <dimen name="margin_extra_large">52dp</dimen>
     <dimen name="margin_huge">96dp</dimen>
+    <dimen name="margin_extra_huge">106dp</dimen>
 
     <dimen name="padding_extra_extra_small">2dp</dimen>
     <dimen name="padding_extra_small">8dp</dimen>
