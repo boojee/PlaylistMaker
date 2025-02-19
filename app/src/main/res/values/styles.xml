@@ -96,4 +96,12 @@
         <item name="android:maxLines">1</item>
         <item name="android:ellipsize">end</item>
     </style>
+
+    <style name="TabLayout" parent="TextViewFontWeight">
+        <item name="fontFamily">@font/ys_display_medium</item>
+        <item name="android:textSize">@dimen/text_size_little</item>
+        <item name="tabIndicatorColor">@color/color_eerie_black</item>
+        <item name="tabTextColor">@color/color_eerie_black</item>
+        <item name="tabSelectedTextColor">@color/color_eerie_black</item>
+    </style>
 </resources>
