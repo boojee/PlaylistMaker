@@ -29,10 +29,17 @@ class RootActivity : AppCompatActivity() {
             when (destination.id) {
                 R.id.searchFragment, R.id.libraryFragment, R.id.settingsFragment -> {
                     binding.bottomNavigationView.visibility = View.VISIBLE
+                    binding.divider.visibility = View.VISIBLE
+                }
+
+                R.id.audioPlayerFragment -> {
+                    binding.bottomNavigationView.visibility = View.GONE
+                    binding.divider.visibility = View.GONE
                 }
 
                 else -> {
                     binding.bottomNavigationView.visibility = View.GONE
+                    binding.divider.visibility = View.GONE
                 }
             }
         }
