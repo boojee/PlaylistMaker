@@ -6,7 +6,4 @@
         <!-- Фон настроек -->
         <item name="colorSecondary">@color/color_eerie_black</item>
     </style>
-
 </resources>
-
-

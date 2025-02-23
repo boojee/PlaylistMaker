@@ -1,29 +1,30 @@
 package com.go.playlistmaker.searchtrack.ui
 
-import android.content.Intent
+import android.content.Context.INPUT_METHOD_SERVICE
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
-import androidx.activity.enableEdgeToEdge
-import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
+import androidx.appcompat.content.res.AppCompatResources.getDrawable
 import androidx.core.view.isVisible
+import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.go.playlistmaker.R
-import com.go.playlistmaker.databinding.ActivitySearchBinding
 import com.go.playlistmaker.searchtrack.domain.models.Track
-import com.go.playlistmaker.audioplayer.ui.AudioPlayerActivity
+import com.go.playlistmaker.audioplayer.ui.AudioPlayerFragment
+import com.go.playlistmaker.databinding.FragmentSearchBinding
 import com.go.playlistmaker.searchtrack.ui.adapters.TrackAdapter
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class SearchActivity : AppCompatActivity() {
+class SearchFragment : Fragment() {
 
     companion object {
         private const val CLICK_DEBOUNCE_DELAY = 2000L
@@ -31,7 +32,7 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private val trackSearchViewModel by viewModel<TrackSearchViewModel>()
-    private lateinit var binding: ActivitySearchBinding
+    private lateinit var binding: FragmentSearchBinding
 
     private var editTextContent: String? = null
     private val musicList: MutableList<Track> = mutableListOf()
@@ -47,34 +48,36 @@ class SearchActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
-        binding = ActivitySearchBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+        editTextContent = savedInstanceState?.getString("EDIT_TEXT_CONTENT")
+    }
 
-        trackSearchViewModel.getSearchStateLiveData().observe(this) { searchState ->
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        binding = FragmentSearchBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        trackSearchViewModel.getSearchStateLiveData().observe(viewLifecycleOwner) { searchState ->
             when (searchState) {
                 is SearchState.SearchLoading -> {
                     binding.progressBar.isVisible = searchState.isLoading
                 }
+
                 is SearchState.MusicList -> stateMusicList(searchState.musicList)
                 is SearchState.HistoryMusicList -> {
                     isVisibleHistoryMusicList(searchState.musicList)
                 }
+
                 is SearchState.SearchError -> showErrorMessage(searchState.message)
             }
         }
 
-        ViewCompat.setOnApplyWindowInsetsListener(binding.search) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-            insets
-        }
-
         initRecyclerView()
-
-        binding.buttonBack.setOnClickListener {
-            finish()
-        }
 
         binding.buttonClear.isVisible = !binding.editTextSearch.text.isNullOrEmpty()
 
@@ -150,24 +153,23 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun initRecyclerView() {
-        binding.recyclerViewSearch.layoutManager = LinearLayoutManager(this)
+        binding.recyclerViewSearch.layoutManager = LinearLayoutManager(requireContext())
         trackAdapter = TrackAdapter { track ->
             if (clickDebounce()) {
-                val audioPlayerIntent = Intent(this, AudioPlayerActivity::class.java)
-                val bundle = Bundle().apply {
-                    putString("TRACK_NAME", track.trackName)
-                    putString("ARTIST_NAME", track.artistName)
-                    putString("TRACK_TIME", track.trackTimeMillis)
-                    putString("ARTWORK_URL", track.artworkUrl100)
-                    putString("COLLECTION_NAME", track.collectionName)
-                    putString("RELEASE_DATE", track.releaseDate)
-                    putString("PRIMARY_GENRE_NAME", track.primaryGenreName)
-                    putString("COUNTRY", track.country)
-                    putString("PREVIEW_URL", track.previewUrl)
-                }
-
-                audioPlayerIntent.putExtras(bundle)
-                startActivity(audioPlayerIntent)
+                findNavController().navigate(
+                    R.id.action_searchFragment_to_audioPlayerFragment,
+                    AudioPlayerFragment.createArgs(
+                        trackName = track.trackName,
+                        artistName = track.artistName,
+                        trackTimeMillis = track.trackTimeMillis,
+                        artworkUrl100 = track.artworkUrl100,
+                        collectionName = track.collectionName,
+                        releaseDate = track.releaseDate,
+                        primaryGenreName = track.primaryGenreName,
+                        country = track.country,
+                        previewUrl = track.previewUrl
+                    )
+                )
 
                 trackSearchViewModel.addMusicHistory(track)
                 if (binding.searchTextViewForHistory.isVisible) {
@@ -213,14 +215,18 @@ class SearchActivity : AppCompatActivity() {
             binding.errorTitle.text = getString(R.string.nothing_found)
             binding.errorDescription.isVisible = false
             binding.buttonRefresh.isVisible = false
-            binding.errorIcon.setImageDrawable(getDrawable(R.drawable.ic_nothing_found))
+            binding.errorIcon.setImageDrawable(
+                getDrawable(
+                    requireContext(),
+                    R.drawable.ic_nothing_found
+                )
+            )
         }
     }
 
     private fun hideKeyboard() {
-        (getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager).hideSoftInputFromWindow(
-            binding.editTextSearch.windowToken, 0
-        )
+        val imm = requireActivity().getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.hideSoftInputFromWindow(binding.editTextSearch.windowToken, 0)
     }
 
     private fun hideSearchHistory() {
@@ -235,7 +241,7 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun showErrorMessage(errorMessage: String) {
-        Toast.makeText(applicationContext, errorMessage, Toast.LENGTH_LONG).show()
+        Toast.makeText(requireContext(), errorMessage, Toast.LENGTH_LONG).show()
         binding.recyclerViewSearch.isVisible = false
         binding.progressBar.isVisible = false
         binding.searchPlaceholder.isVisible = true
@@ -243,18 +249,13 @@ class SearchActivity : AppCompatActivity() {
         binding.errorDescription.isVisible = true
         binding.buttonRefresh.isVisible = true
         isLastRequestFailed = true
-        binding.errorIcon.setImageDrawable(getDrawable(R.drawable.ic_no_internet))
+        binding.errorIcon.setImageDrawable(getDrawable(requireContext(), R.drawable.ic_no_internet))
         lastSearchQuery = ""
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putString("EDIT_TEXT_CONTENT", editTextContent)
-    }
-
-    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
-        super.onRestoreInstanceState(savedInstanceState)
-        editTextContent = savedInstanceState.getString("EDIT_TEXT_CONTENT")
     }
 
     private fun clickDebounce(): Boolean {

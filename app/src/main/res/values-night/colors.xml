@@ -12,4 +12,7 @@
     <color name="icon_search_error">@color/color_white</color>
     <color name="player_additional_buttons">#40FFFFFF</color>
     <color name="player_play_button">@color/color_white</color>
+    <color name="bottom_nav_selected">@color/color_royal_blue</color>
+    <color name="bottom_nav_unselected">@color/color_white</color>
+    <color name="bottom_nav_background">@color/color_eerie_black</color>
 </resources>

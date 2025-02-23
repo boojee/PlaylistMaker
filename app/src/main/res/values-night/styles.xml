@@ -53,6 +53,7 @@
         <item name="tabIndicatorColor">@color/color_white</item>
         <item name="tabTextColor">@color/color_white</item>
         <item name="tabSelectedTextColor">@color/color_white</item>
+        <item name="android:background">@color/color_eerie_black</item>
     </style>
 
 </resources>

@@ -3,38 +3,37 @@ package com.go.playlistmaker.settings.ui
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import androidx.activity.enableEdgeToEdge
-import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import com.go.playlistmaker.R
-import com.go.playlistmaker.databinding.ActivitySettingsBinding
+import com.go.playlistmaker.databinding.FragmentSettingsBinding
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class SettingsActivity : AppCompatActivity() {
+class SettingsFragment : Fragment() {
 
     private val settingsViewModel by viewModel<SettingsViewModel>()
-    private lateinit var binding: ActivitySettingsBinding
+    private lateinit var binding: FragmentSettingsBinding
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
-        binding = ActivitySettingsBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        binding = FragmentSettingsBinding.inflate(inflater, container, false)
+        return binding.root
+    }
 
-        ViewCompat.setOnApplyWindowInsetsListener(binding.settings) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-            insets
-        }
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
-        binding.buttonBack.setOnClickListener { finish() }
         binding.buttonShare.setOnClickListener { shareCourse() }
         binding.buttonSupport.setOnClickListener { sendEmailToSupport() }
         binding.buttonUsersAgreement.setOnClickListener { sendUserAgreement() }
 
-        settingsViewModel.getThemeStateLiveData().observe(this) { settingsState ->
-            when(settingsState) {
+        settingsViewModel.getThemeStateLiveData().observe(viewLifecycleOwner) { settingsState ->
+            when (settingsState) {
                 is SettingsState.CurrentTheme -> {
                     binding.themeSwitcher.isChecked = settingsState.isThemeDark
                 }

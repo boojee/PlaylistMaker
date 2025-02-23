@@ -7,20 +7,12 @@
     android:layout_height="match_parent"
     android:background="?attr/colorSecondary"
     android:orientation="vertical"
-    tools:context=".searchtrack.ui.SearchActivity">
+    tools:context=".searchtrack.ui.SearchFragment">
 
     <com.google.android.material.appbar.MaterialToolbar
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:contentInsetStart="0dp">
-
-        <ImageView
-            android:id="@+id/button_back"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/margin_extra_extra_small"
-            android:padding="@dimen/padding_little"
-            android:src="@drawable/ic_arrow_back" />
 
         <TextView
             style="@style/TitleText"
@@ -76,8 +68,8 @@
         android:id="@+id/progress_bar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="148dp"
         android:layout_gravity="center"
+        android:layout_marginTop="148dp"
         android:indeterminateTint="@color/color_royal_blue"
         android:visibility="gone" />
 
