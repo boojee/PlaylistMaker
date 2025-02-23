@@ -20,4 +20,7 @@
     <color name="icon_search_error">@color/color_eerie_black</color>
     <color name="player_additional_buttons">#401A1B22</color>
     <color name="player_play_button">@color/color_eerie_black</color>
+    <color name="bottom_nav_selected">@color/color_royal_blue</color>
+    <color name="bottom_nav_unselected">@color/color_eerie_black</color>
+    <color name="bottom_nav_background">@color/color_white</color>
 </resources>

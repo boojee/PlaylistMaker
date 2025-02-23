@@ -1,7 +1,7 @@
 package com.go.playlistmaker.di
 
-import com.go.playlistmaker.medialibrary.ui.FavoritesViewModel
-import com.go.playlistmaker.medialibrary.ui.PlaylistsViewModel
+import com.go.playlistmaker.favorites.ui.FavoritesViewModel
+import com.go.playlistmaker.playlists.ui.PlaylistsViewModel
 import com.go.playlistmaker.audioplayer.ui.AudioPlayerViewModel
 import com.go.playlistmaker.searchtrack.ui.TrackSearchViewModel
 import com.go.playlistmaker.settings.ui.SettingsViewModel

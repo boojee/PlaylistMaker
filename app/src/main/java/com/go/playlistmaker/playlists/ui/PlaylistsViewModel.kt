@@ -1,4 +1,4 @@
-package com.go.playlistmaker.medialibrary.ui
+package com.go.playlistmaker.playlists.ui
 
 import androidx.lifecycle.ViewModel
 

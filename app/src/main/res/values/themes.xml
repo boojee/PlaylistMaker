@@ -5,9 +5,5 @@
         <item name="colorPrimary">@color/color_royal_blue</item>
         <!-- Фон настроек -->
         <item name="colorSecondary">@color/color_white</item>
-
     </style>
-
 </resources>
-
-
