@@ -1,16 +1,20 @@
 package com.go.playlistmaker.audioplayer.data
 
 import android.media.MediaPlayer
-import android.os.Handler
-import android.os.Looper
 import com.go.playlistmaker.audioplayer.domain.api.AudioPlayerRepository
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Locale
 
-class AudioPlayerRepositoryImpl(private var mediaPlayer: MediaPlayer) : AudioPlayerRepository {
+class AudioPlayerRepositoryImpl(
+    private var mediaPlayer: MediaPlayer,
+    private var scope: CoroutineScope
+) : AudioPlayerRepository {
 
-    private val handler = Handler(Looper.getMainLooper())
-    private var updateRunnable: Runnable? = null
+    private var timerJob: Job? = null
     private var isUpdatingTime = false
 
     override fun preparePlayer(previewUrl: String, onCompletion: () -> Unit) {
@@ -32,6 +36,7 @@ class AudioPlayerRepositoryImpl(private var mediaPlayer: MediaPlayer) : AudioPla
 
     override fun pausePlayer() {
         mediaPlayer.pause()
+        timerJob?.cancel()
         stopUpdatingTime()
     }
 
@@ -43,26 +48,19 @@ class AudioPlayerRepositoryImpl(private var mediaPlayer: MediaPlayer) : AudioPla
         if (isUpdatingTime) return
         isUpdatingTime = true
 
-        updateRunnable = object : Runnable {
-            override fun run() {
-                if (mediaPlayer.isPlaying) {
-                    val currentPosition = mediaPlayer.currentPosition
-                    val formattedTime = SimpleDateFormat("mm:ss", Locale.getDefault())
-                        .format(currentPosition)
-                    callback.updatePlaybackTime(formattedTime)
-                }
-
-                if (isUpdatingTime) {
-                    handler.postDelayed(this, 500L)
-                }
+        timerJob = scope.launch {
+            while (mediaPlayer.isPlaying) {
+                delay(300L)
+                val currentPosition = mediaPlayer.currentPosition
+                val formattedTime = SimpleDateFormat("mm:ss", Locale.getDefault())
+                    .format(currentPosition)
+                callback.updatePlaybackTime(formattedTime)
             }
         }
-        updateRunnable?.let { handler.post(it) }
     }
 
     private fun stopUpdatingTime() {
         isUpdatingTime = false
-        updateRunnable?.let { handler.removeCallbacks(it) }
-        updateRunnable = null
+        timerJob?.cancel()
     }
 }

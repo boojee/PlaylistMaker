@@ -6,26 +6,28 @@ import com.go.playlistmaker.searchtrack.data.mappers.TrackMapper
 import com.go.playlistmaker.searchtrack.domain.api.TrackRepository
 import com.go.playlistmaker.searchtrack.domain.models.Track
 import com.go.playlistmaker.searchtrack.util.Resource
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 
 class TrackRepositoryImpl(
     private val networkClient: NetworkClient,
     private val searchHistory: SearchHistory
 ) : TrackRepository {
-    override fun findMusic(expression: String): Resource<List<Track>> {
+    override fun findMusic(expression: String): Flow<Resource<List<Track>>> = flow {
         val response = networkClient.doRequest(TrackSearchRequest(expression))
-        return when (response.resultCode) {
+        when (response.resultCode) {
             -1 -> {
-                Resource.Error("Проверьте подключение к интернету")
+                emit(Resource.Error("Проверьте подключение к интернету"))
             }
 
             200 -> {
-                Resource.Success((response as TrackSearchResponse).results.map {
+                emit(Resource.Success((response as TrackSearchResponse).results.map {
                     TrackMapper.toTrack(it)
-                })
+                }))
             }
 
             else -> {
-                Resource.Error("Ошибка сервера")
+                emit(Resource.Error("Ошибка сервера"))
             }
         }
     }
