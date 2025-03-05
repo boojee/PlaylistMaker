@@ -6,6 +6,8 @@ import com.go.playlistmaker.searchtrack.data.TrackRepositoryImpl
 import com.go.playlistmaker.searchtrack.domain.api.TrackRepository
 import com.go.playlistmaker.settings.data.SettingsRepositoryImpl
 import com.go.playlistmaker.settings.domain.api.SettingsRepository
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import org.koin.dsl.module
 
 val repositoryModule = module {
@@ -19,6 +21,9 @@ val repositoryModule = module {
     }
 
     factory<AudioPlayerRepository> {
-        AudioPlayerRepositoryImpl(mediaPlayer = get())
+        AudioPlayerRepositoryImpl(
+            mediaPlayer = get(),
+            scope = CoroutineScope(Dispatchers.IO)
+        )
     }
 }

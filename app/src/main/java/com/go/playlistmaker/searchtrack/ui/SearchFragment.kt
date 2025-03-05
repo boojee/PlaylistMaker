@@ -2,8 +2,6 @@ package com.go.playlistmaker.searchtrack.ui
 
 import android.content.Context.INPUT_METHOD_SERVICE
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
@@ -15,6 +13,8 @@ import android.widget.Toast
 import androidx.appcompat.content.res.AppCompatResources.getDrawable
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.viewModelScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.go.playlistmaker.R
@@ -22,6 +22,9 @@ import com.go.playlistmaker.searchtrack.domain.models.Track
 import com.go.playlistmaker.audioplayer.ui.AudioPlayerFragment
 import com.go.playlistmaker.databinding.FragmentSearchBinding
 import com.go.playlistmaker.searchtrack.ui.adapters.TrackAdapter
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SearchFragment : Fragment() {
@@ -39,12 +42,8 @@ class SearchFragment : Fragment() {
     private var lastSearchQuery: String? = null
     private var isLastRequestFailed: Boolean = false
     private var isClickAllowed = true
-    private val handler = Handler(Looper.getMainLooper())
     private var trackAdapter: TrackAdapter? = null
-
-    private val searchRunnable = Runnable {
-        findMusic(binding.editTextSearch.text.toString())
-    }
+    private var searchJob: Job? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -94,7 +93,9 @@ class SearchFragment : Fragment() {
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 editTextContent = s?.toString()
-                lastSearchQuery = ""
+                if (lastSearchQuery != s.toString()) {
+                    lastSearchQuery = ""
+                }
                 val query = binding.editTextSearch.text?.toString()?.trim()
                 if (!query.isNullOrEmpty()) {
                     searchDebounce()
@@ -262,13 +263,19 @@ class SearchFragment : Fragment() {
         val current = isClickAllowed
         if (isClickAllowed) {
             isClickAllowed = false
-            handler.postDelayed({ isClickAllowed = true }, CLICK_DEBOUNCE_DELAY)
+            trackSearchViewModel.viewModelScope.launch {
+                delay(CLICK_DEBOUNCE_DELAY)
+                isClickAllowed = true
+            }
         }
         return current
     }
 
     private fun searchDebounce() {
-        handler.removeCallbacks(searchRunnable)
-        handler.postDelayed(searchRunnable, SEARCH_DEBOUNCE_DELAY)
+        searchJob?.cancel()
+        searchJob = lifecycleScope.launch {
+            delay(SEARCH_DEBOUNCE_DELAY)
+            findMusic(binding.editTextSearch.text.toString())
+        }
     }
 }

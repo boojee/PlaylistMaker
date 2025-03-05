@@ -4,20 +4,22 @@ import com.go.playlistmaker.searchtrack.domain.api.TrackInteractor
 import com.go.playlistmaker.searchtrack.domain.api.TrackRepository
 import com.go.playlistmaker.searchtrack.domain.models.Track
 import com.go.playlistmaker.searchtrack.util.Resource
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import java.util.concurrent.Executors
 
 class TrackInteractorImpl(private val trackRepository: TrackRepository) : TrackInteractor {
     private var executor = Executors.newCachedThreadPool()
 
-    override fun findMusic(expression: String, consumer: TrackInteractor.TrackConsumer) {
-        executor.execute {
-            when (val resource = trackRepository.findMusic(expression)) {
+    override fun findMusic(expression: String): Flow<Pair<List<Track>?, String?>> {
+        return trackRepository.findMusic(expression).map { result ->
+            when (result) {
                 is Resource.Success -> {
-                    consumer.consume(resource.data.orEmpty(), null)
+                    Pair(result.data, null)
                 }
 
                 is Resource.Error -> {
-                    consumer.consume(emptyList(), resource.message)
+                    Pair(null, result.message)
                 }
             }
         }

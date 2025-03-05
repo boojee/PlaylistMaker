@@ -6,13 +6,15 @@ import android.net.NetworkCapabilities
 import com.go.playlistmaker.searchtrack.data.NetworkClient
 import com.go.playlistmaker.searchtrack.data.dto.TrackSearchRequest
 import com.go.playlistmaker.searchtrack.data.dto.Response
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 class ItunesRetrofit(
     private val context: Context,
     private val itunesApi: ItunesApi
 ) : NetworkClient {
 
-    override fun doRequest(dto: Any): Response {
+    override suspend fun doRequest(dto: Any): Response {
         if (!isConnected()) {
             return Response().apply { resultCode = -1 }
         }
@@ -20,10 +22,14 @@ class ItunesRetrofit(
             return Response().apply { resultCode = 400 }
         }
 
-        val resp = itunesApi.findMusic(dto.expression).execute()
-        val body = resp.body() ?: Response()
-
-        return body.apply { resultCode = resp.code() }
+        return withContext(Dispatchers.IO) {
+            try {
+                val response = itunesApi.findMusic(dto.expression)
+                response.apply { resultCode = 200 }
+            } catch (e: Throwable) {
+                Response().apply { resultCode = 500 }
+            }
+        }
     }
 
     private fun isConnected(): Boolean {
