@@ -12,6 +12,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.go.playlistmaker.R
 import com.go.playlistmaker.databinding.FragmentAudioPlayerBinding
+import com.go.playlistmaker.favorites.data.db.TrackFavorite
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
@@ -21,6 +22,7 @@ class AudioPlayerFragment : Fragment() {
     companion object {
         private const val DEFAULT_TRACK_TIME = "00:00"
         private const val FORMAT_IMAGE_ALBUM = "512x512bb.jpg"
+        private const val TRACK_ID = "TRACK_ID"
         private const val TRACK_NAME = "TRACK_NAME"
         private const val ARTIST_NAME = "ARTIST_NAME"
         private const val TRACK_TIME = "TRACK_TIME"
@@ -30,8 +32,10 @@ class AudioPlayerFragment : Fragment() {
         private const val PRIMARY_GENRE_NAME = "PRIMARY_GENRE_NAME"
         private const val COUNTRY = "COUNTRY"
         private const val PREVIEW_URL = "PREVIEW_URL"
+        private const val IS_FAVORITE = "IS_FAVORITE"
 
         fun createArgs(
+            trackId: Long,
             trackName: String,
             artistName: String,
             trackTimeMillis: String,
@@ -40,9 +44,11 @@ class AudioPlayerFragment : Fragment() {
             releaseDate: String,
             primaryGenreName: String,
             country: String,
-            previewUrl: String
+            previewUrl: String,
+            isFavorite: Boolean
         ): Bundle =
             bundleOf(
+                TRACK_ID to trackId,
                 TRACK_NAME to trackName,
                 ARTIST_NAME to artistName,
                 TRACK_TIME to trackTimeMillis,
@@ -52,12 +58,14 @@ class AudioPlayerFragment : Fragment() {
                 PRIMARY_GENRE_NAME to primaryGenreName,
                 COUNTRY to country,
                 PREVIEW_URL to previewUrl,
+                IS_FAVORITE to isFavorite
             )
     }
 
     private val audioPlayerViewModel by viewModel<AudioPlayerViewModel>()
     private lateinit var binding: FragmentAudioPlayerBinding
 
+    private var trackId: Long? = null
     private var trackName: String? = null
     private var artistName: String? = null
     private var trackTimeMillis: String? = null
@@ -67,6 +75,7 @@ class AudioPlayerFragment : Fragment() {
     private var primaryGenreName: String? = null
     private var country: String? = null
     private var previewUrl: String? = null
+    private var isFavorite: Boolean? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -79,15 +88,17 @@ class AudioPlayerFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        trackName = arguments?.getString("TRACK_NAME")
-        artistName = arguments?.getString("ARTIST_NAME")
-        trackTimeMillis = arguments?.getString("TRACK_TIME")
-        artworkUrl100 = arguments?.getString("ARTWORK_URL")
-        collectionName = arguments?.getString("COLLECTION_NAME")
-        releaseDate = arguments?.getString("RELEASE_DATE")
-        primaryGenreName = arguments?.getString("PRIMARY_GENRE_NAME")
-        country = arguments?.getString("COUNTRY")
-        previewUrl = arguments?.getString("PREVIEW_URL")
+        trackId = arguments?.getLong(TRACK_ID)
+        trackName = arguments?.getString(TRACK_NAME)
+        artistName = arguments?.getString(ARTIST_NAME)
+        trackTimeMillis = arguments?.getString(TRACK_TIME)
+        artworkUrl100 = arguments?.getString(ARTWORK_URL)
+        collectionName = arguments?.getString(COLLECTION_NAME)
+        releaseDate = arguments?.getString(RELEASE_DATE)
+        primaryGenreName = arguments?.getString(PRIMARY_GENRE_NAME)
+        country = arguments?.getString(COUNTRY)
+        previewUrl = arguments?.getString(PREVIEW_URL)
+        isFavorite = arguments?.getBoolean(IS_FAVORITE)
 
         previewUrl?.let { audioPlayerViewModel.preparePlayer(it) }
 
@@ -154,6 +165,47 @@ class AudioPlayerFragment : Fragment() {
         binding.playbackTime.text = DEFAULT_TRACK_TIME
         binding.playButton.setOnClickListener { audioPlayerViewModel.playbackControl() }
         binding.buttonBack.setOnClickListener { findNavController().navigateUp() }
+
+        updateFavoriteButtonState()
+
+        binding.addToFavoriteButton.setOnClickListener {
+            val track = TrackFavorite(
+                trackId = trackId ?: 0,
+                trackName = trackName.orEmpty(),
+                artistName = artistName.orEmpty(),
+                trackTimeMillis = trackTimeMillis.orEmpty(),
+                artworkUrl100 = artworkUrl100.orEmpty(),
+                collectionName = collectionName.orEmpty(),
+                releaseDate = releaseDate.orEmpty(),
+                primaryGenreName = primaryGenreName.orEmpty(),
+                country = country.orEmpty(),
+                previewUrl = previewUrl.orEmpty(),
+                isFavorite = isFavorite != true
+            )
+            if (isFavorite == true) {
+                audioPlayerViewModel.deleteTrackFavorite(
+                    track = track
+                )
+                isFavorite = false
+            } else {
+                audioPlayerViewModel.addTrackFavorite(
+                    track = track
+                )
+                isFavorite = true
+            }
+            updateFavoriteButtonState()
+        }
+    }
+
+    private fun updateFavoriteButtonState() {
+        val iconRes = if (isFavorite == true) {
+            R.drawable.ic_add_to_favorites_filled
+        } else {
+            R.drawable.ic_add_to_favorites
+        }
+        binding.addToFavoriteButton.setImageDrawable(
+            getDrawable(requireContext(), iconRes)
+        )
     }
 
     override fun onPause() {

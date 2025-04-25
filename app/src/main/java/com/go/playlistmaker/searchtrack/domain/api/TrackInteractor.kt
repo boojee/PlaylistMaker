@@ -5,11 +5,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface TrackInteractor {
     fun findMusic(expression: String): Flow<Pair<List<Track>?, String?>>
-    fun findMusicHistory(consumer: TrackConsumerHistory)
-    fun addMusicHistory(track: Track)
+    fun findMusicHistory(): Flow<List<Track>>
+    suspend fun addMusicHistory(track: Track)
     fun clearHistory()
-
-    interface TrackConsumerHistory {
-        fun consume(foundMusic: List<Track>)
-    }
 }

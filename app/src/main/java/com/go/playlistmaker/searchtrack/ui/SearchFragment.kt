@@ -160,6 +160,7 @@ class SearchFragment : Fragment() {
                 findNavController().navigate(
                     R.id.action_searchFragment_to_audioPlayerFragment,
                     AudioPlayerFragment.createArgs(
+                        trackId = track.trackId,
                         trackName = track.trackName,
                         artistName = track.artistName,
                         trackTimeMillis = track.trackTimeMillis,
@@ -168,7 +169,8 @@ class SearchFragment : Fragment() {
                         releaseDate = track.releaseDate,
                         primaryGenreName = track.primaryGenreName,
                         country = track.country,
-                        previewUrl = track.previewUrl
+                        previewUrl = track.previewUrl,
+                        isFavorite = track.isFavorite
                     )
                 )
 

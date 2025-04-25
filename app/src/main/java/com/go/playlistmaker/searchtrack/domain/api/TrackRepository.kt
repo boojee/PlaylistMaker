@@ -6,7 +6,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface TrackRepository {
     fun findMusic(expression: String): Flow<Resource<List<Track>>>
-    fun findMusicHistory(): List<Track>
-    fun addMusicHistory(track: Track)
+    fun findMusicHistory(): Flow<List<Track>>
+    suspend fun addMusicHistory(track: Track)
     fun clearHistory()
 }

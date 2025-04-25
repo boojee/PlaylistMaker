@@ -1,7 +1,11 @@
-package com.go.playlistmaker.searchtrack.domain.models
+package com.go.playlistmaker.favorites.data.db
 
-data class Track(
-    val trackId: Long,
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+
+@Entity(tableName = "favoriteTracks")
+data class TrackFavorite(
+    @PrimaryKey(autoGenerate = true) val trackId: Long,
     val trackName: String,
     val artistName: String,
     val trackTimeMillis: String,
@@ -11,5 +15,6 @@ data class Track(
     val primaryGenreName: String,
     val country: String,
     val previewUrl: String,
+    val createdAt: Long = System.currentTimeMillis(),
     val isFavorite: Boolean = false
 )

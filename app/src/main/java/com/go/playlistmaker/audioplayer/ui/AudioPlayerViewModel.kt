@@ -2,9 +2,16 @@ package com.go.playlistmaker.audioplayer.ui
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.go.playlistmaker.audioplayer.domain.api.AudioPlayerInteractor
+import com.go.playlistmaker.favorites.data.db.TrackFavorite
+import com.go.playlistmaker.favorites.domain.api.TrackFavoriteInteractor
+import kotlinx.coroutines.launch
 
-class AudioPlayerViewModel(private val audioPlayerInteractor: AudioPlayerInteractor) : ViewModel() {
+class AudioPlayerViewModel(
+    private val audioPlayerInteractor: AudioPlayerInteractor,
+    private val trackFavoriteInteractor: TrackFavoriteInteractor
+) : ViewModel() {
 
     private val trackStateLiveData = MutableLiveData<TrackState>()
     private var playerState = STATE_DEFAULT
@@ -51,6 +58,14 @@ class AudioPlayerViewModel(private val audioPlayerInteractor: AudioPlayerInterac
                 trackStateLiveData.postValue(TrackState.Playing(DEFAULT_TRACK_TIME))
             }
         }
+    }
+
+    fun addTrackFavorite(track: TrackFavorite) {
+        viewModelScope.launch { trackFavoriteInteractor.insert(track) }
+    }
+
+    fun deleteTrackFavorite(track: TrackFavorite) {
+        viewModelScope.launch { trackFavoriteInteractor.delete(track) }
     }
 
     override fun onCleared() {
