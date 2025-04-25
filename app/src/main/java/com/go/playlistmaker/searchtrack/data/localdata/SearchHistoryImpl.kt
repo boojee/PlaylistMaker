@@ -6,6 +6,7 @@ import com.go.playlistmaker.searchtrack.domain.models.Track
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flow
 
 class SearchHistoryImpl(private val sharedPreferences: SharedPreferences) : SearchHistory {
@@ -18,24 +19,27 @@ class SearchHistoryImpl(private val sharedPreferences: SharedPreferences) : Sear
     private val gson = Gson()
 
     override suspend fun addTrack(track: Track) {
-        getHistory().collect { history ->
-            val mutableHistoryList = history.toMutableList()
-            mutableHistoryList.removeIf { it.trackId == track.trackId }
+        val historyList = getHistory().firstOrNull() ?: emptyList()
 
-            mutableHistoryList.add(0, track)
+        val mutableHistoryList = historyList.toMutableList()
+        mutableHistoryList.removeIf { it.trackId == track.trackId }
 
-            if (mutableHistoryList.size > MAX_HISTORY_SIZE) {
-                mutableHistoryList.removeAt(history.size - 1)
-            }
+        mutableHistoryList.add(0, track)
 
-            sharedPreferences.edit().putString(HISTORY_KEY, serializeHistory(mutableHistoryList))
-                .apply()
+        if (mutableHistoryList.size > MAX_HISTORY_SIZE) {
+            mutableHistoryList.removeAt(mutableHistoryList.size - 1)
         }
+
+        sharedPreferences.edit()
+            .putString(HISTORY_KEY, serializeHistory(mutableHistoryList))
+            .apply()
     }
 
     override fun getHistory(): Flow<List<Track>> = flow {
         val historyString = sharedPreferences.getString(HISTORY_KEY, null)
-        emit(deserializeHistory(historyString.orEmpty()))
+        if (historyString != null) {
+            emit(deserializeHistory(historyString))
+        }
     }
 
     override fun clearHistory() {
