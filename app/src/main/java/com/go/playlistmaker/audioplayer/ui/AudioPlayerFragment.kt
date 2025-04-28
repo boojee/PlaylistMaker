@@ -32,7 +32,9 @@ class AudioPlayerFragment : Fragment() {
         private const val PRIMARY_GENRE_NAME = "PRIMARY_GENRE_NAME"
         private const val COUNTRY = "COUNTRY"
         private const val PREVIEW_URL = "PREVIEW_URL"
-        private const val IS_FAVORITE = "IS_FAVORITE"
+        const val IS_FAVORITE = "IS_FAVORITE"
+        const val REQUEST_KEY = "UPDATE_FAVORITE_REQUEST_KEY"
+        const val TRACK_ID_KEY = "TRACK_ID"
 
         fun createArgs(
             trackId: Long,
@@ -169,6 +171,7 @@ class AudioPlayerFragment : Fragment() {
         updateFavoriteButtonState()
 
         binding.addToFavoriteButton.setOnClickListener {
+            val newFavoriteState = isFavorite != true
             val track = TrackFavorite(
                 trackId = trackId ?: 0,
                 trackName = trackName.orEmpty(),
@@ -180,20 +183,22 @@ class AudioPlayerFragment : Fragment() {
                 primaryGenreName = primaryGenreName.orEmpty(),
                 country = country.orEmpty(),
                 previewUrl = previewUrl.orEmpty(),
-                isFavorite = isFavorite != true
+                isFavorite = newFavoriteState
             )
             if (isFavorite == true) {
-                audioPlayerViewModel.deleteTrackFavorite(
-                    track = track
-                )
-                isFavorite = false
+                audioPlayerViewModel.deleteTrackFavorite(track)
             } else {
-                audioPlayerViewModel.addTrackFavorite(
-                    track = track
-                )
-                isFavorite = true
+                audioPlayerViewModel.addTrackFavorite(track)
             }
+
+            isFavorite = newFavoriteState
             updateFavoriteButtonState()
+
+            val result = bundleOf(
+                TRACK_ID_KEY to trackId,
+                IS_FAVORITE to newFavoriteState
+            )
+            parentFragmentManager.setFragmentResult(REQUEST_KEY, result)
         }
     }
 

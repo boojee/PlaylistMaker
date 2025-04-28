@@ -76,6 +76,18 @@ class SearchFragment : Fragment() {
             }
         }
 
+        parentFragmentManager.setFragmentResultListener(
+            AudioPlayerFragment.REQUEST_KEY,
+            viewLifecycleOwner
+        ) { requestKey, bundle ->
+            if (requestKey == AudioPlayerFragment.REQUEST_KEY) {
+                val trackId = bundle.getLong(AudioPlayerFragment.TRACK_ID_KEY)
+                val isFavorite = bundle.getBoolean(AudioPlayerFragment.IS_FAVORITE)
+
+                updateTrackFavoriteState(trackId, isFavorite)
+            }
+        }
+
         initRecyclerView()
 
         binding.buttonClear.isVisible = !binding.editTextSearch.text.isNullOrEmpty()
@@ -279,5 +291,21 @@ class SearchFragment : Fragment() {
             delay(SEARCH_DEBOUNCE_DELAY)
             findMusic(binding.editTextSearch.text.toString())
         }
+    }
+
+    private fun updateTrackFavoriteState(trackId: Long, isFavorite: Boolean) {
+        val updatedList = musicList.map { track ->
+            if (track.trackId == trackId) {
+                track.copy(isFavorite = isFavorite)
+            } else {
+                track
+            }
+        }.toMutableList()
+
+        musicList.clear()
+        musicList.addAll(updatedList)
+
+        trackAdapter?.setItems(musicList)
+        trackAdapter?.notifyDataSetChanged()
     }
 }
