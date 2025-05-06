@@ -1,5 +1,6 @@
 package com.go.playlistmaker.searchtrack.data
 
+import com.go.playlistmaker.favorites.data.db.TrackFavoriteDao
 import com.go.playlistmaker.searchtrack.data.dto.TrackSearchResponse
 import com.go.playlistmaker.searchtrack.data.dto.TrackSearchRequest
 import com.go.playlistmaker.searchtrack.data.mappers.TrackMapper
@@ -7,11 +8,13 @@ import com.go.playlistmaker.searchtrack.domain.api.TrackRepository
 import com.go.playlistmaker.searchtrack.domain.models.Track
 import com.go.playlistmaker.searchtrack.util.Resource
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
 
 class TrackRepositoryImpl(
     private val networkClient: NetworkClient,
-    private val searchHistory: SearchHistory
+    private val searchHistory: SearchHistory,
+    private val trackFavoriteDao: TrackFavoriteDao
 ) : TrackRepository {
     override fun findMusic(expression: String): Flow<Resource<List<Track>>> = flow {
         val response = networkClient.doRequest(TrackSearchRequest(expression))
@@ -21,8 +24,12 @@ class TrackRepositoryImpl(
             }
 
             200 -> {
-                emit(Resource.Success((response as TrackSearchResponse).results.map {
-                    TrackMapper.toTrack(it)
+                val trackFavoriteList = trackFavoriteDao.getAllItemsId().first()
+                emit(Resource.Success((response as TrackSearchResponse).results.map { trackDto ->
+                    val track = trackDto.copy(isFavorite = trackFavoriteList.any { trackId ->
+                        trackId == trackDto.trackId
+                    })
+                    TrackMapper.toTrack(track)
                 }))
             }
 
@@ -32,11 +39,20 @@ class TrackRepositoryImpl(
         }
     }
 
-    override fun findMusicHistory(): List<Track> {
-        return searchHistory.getHistory()
+    override fun findMusicHistory(): Flow<List<Track>> = flow {
+        searchHistory.getHistory().collect { tracksHistory ->
+            val trackFavoriteList = trackFavoriteDao.getAllItemsId().first()
+            emit(tracksHistory.map { trackHistory ->
+                val track = trackHistory.copy(isFavorite = trackFavoriteList.any { trackId ->
+                    trackId == trackHistory.trackId
+                })
+                track
+            }
+            )
+        }
     }
 
-    override fun addMusicHistory(track: Track) {
+    override suspend fun addMusicHistory(track: Track) {
         searchHistory.addTrack(track)
     }
 

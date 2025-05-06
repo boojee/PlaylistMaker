@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.res.Configuration
 import androidx.appcompat.app.AppCompatDelegate
 import com.go.playlistmaker.di.dataModule
+import com.go.playlistmaker.di.databaseModule
 import com.go.playlistmaker.di.interactorModule
 import com.go.playlistmaker.di.repositoryModule
 import com.go.playlistmaker.di.viewModelModule
@@ -27,7 +28,7 @@ class App : Application() {
 
         startKoin {
             androidContext(this@App)
-            modules(dataModule, repositoryModule, interactorModule, viewModelModule)
+            modules(databaseModule, dataModule, repositoryModule, interactorModule, viewModelModule)
         }
 
         val sharedPreferences = getSharedPreferences("app_preferences", Context.MODE_PRIVATE)

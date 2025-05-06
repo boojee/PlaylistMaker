@@ -6,10 +6,8 @@ import com.go.playlistmaker.searchtrack.domain.models.Track
 import com.go.playlistmaker.searchtrack.util.Resource
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
-import java.util.concurrent.Executors
 
 class TrackInteractorImpl(private val trackRepository: TrackRepository) : TrackInteractor {
-    private var executor = Executors.newCachedThreadPool()
 
     override fun findMusic(expression: String): Flow<Pair<List<Track>?, String?>> {
         return trackRepository.findMusic(expression).map { result ->
@@ -25,13 +23,11 @@ class TrackInteractorImpl(private val trackRepository: TrackRepository) : TrackI
         }
     }
 
-    override fun findMusicHistory(consumer: TrackInteractor.TrackConsumerHistory) {
-        executor.execute {
-            consumer.consume(trackRepository.findMusicHistory())
-        }
+    override fun findMusicHistory(): Flow<List<Track>> {
+        return trackRepository.findMusicHistory()
     }
 
-    override fun addMusicHistory(track: Track) {
+    override suspend fun addMusicHistory(track: Track) {
         trackRepository.addMusicHistory(track)
     }
 

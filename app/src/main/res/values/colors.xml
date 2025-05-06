@@ -7,6 +7,7 @@
     <color name="color_silver_foil">#AEAFB4</color>
     <color name="color_bright_gray">#E6E8EB</color>
     <color name="color_baby_blue_eyes_with_opacity">#7A9FBBF3</color>
+    <color name="color_begonia">#F56B6C</color>
     <color name="setting_icons">@color/color_silver_foil</color>
     <color name="button_backward">@color/color_eerie_black</color>
     <color name="button_magnifying_glass">@color/color_silver_foil</color>

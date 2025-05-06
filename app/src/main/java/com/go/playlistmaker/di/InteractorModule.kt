@@ -2,6 +2,8 @@ package com.go.playlistmaker.di
 
 import com.go.playlistmaker.audioplayer.domain.api.AudioPlayerInteractor
 import com.go.playlistmaker.audioplayer.domain.impl.AudioPlayerInteractorImpl
+import com.go.playlistmaker.favorites.domain.api.TrackFavoriteInteractor
+import com.go.playlistmaker.favorites.domain.impl.TrackFavoriteInteractorImpl
 import com.go.playlistmaker.searchtrack.domain.api.TrackInteractor
 import com.go.playlistmaker.searchtrack.domain.impl.TrackInteractorImpl
 import com.go.playlistmaker.settings.domain.api.SettingsInteractor
@@ -20,5 +22,9 @@ val interactorModule = module {
 
     factory<AudioPlayerInteractor> {
         AudioPlayerInteractorImpl(audioPlayerRepository = get())
+    }
+
+    factory<TrackFavoriteInteractor> {
+        TrackFavoriteInteractorImpl(trackFavoriteRepository = get())
     }
 }

@@ -37,16 +37,15 @@ class TrackSearchViewModel(
     }
 
     fun addMusicHistory(track: Track) {
-        trackInteractor.addMusicHistory(track)
+        viewModelScope.launch { trackInteractor.addMusicHistory(track) }
     }
 
     fun findMusicHistory() {
-        trackInteractor.findMusicHistory(object :
-            TrackInteractor.TrackConsumerHistory {
-            override fun consume(foundMusic: List<Track>) {
+        viewModelScope.launch {
+            trackInteractor.findMusicHistory().collect { foundMusic ->
                 searchStateLiveData.postValue(SearchState.HistoryMusicList(foundMusic))
             }
-        })
+        }
     }
 
     fun clearHistory() {
