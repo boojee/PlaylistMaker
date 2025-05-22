@@ -45,4 +45,8 @@
             android:id="@+id/action_favoritesFragment_to_audioPlayerFragment"
             app:destination="@id/audioPlayerFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/createPlaylistFragment"
+        android:name="com.go.playlistmaker.createplaylist.ui.fragments.CreatePlaylistFragment"
+        android:label="CreatePlaylistFragment" />
 </navigation>

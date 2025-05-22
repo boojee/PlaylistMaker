@@ -11,6 +11,7 @@ import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.go.playlistmaker.R
+import com.go.playlistmaker.audioplayer.ui.playlistbottomsheet.PlaylistBottomSheetFragment
 import com.go.playlistmaker.databinding.FragmentAudioPlayerBinding
 import com.go.playlistmaker.favorites.data.db.TrackFavorite
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -200,6 +201,17 @@ class AudioPlayerFragment : Fragment() {
             )
             parentFragmentManager.setFragmentResult(REQUEST_KEY, result)
         }
+        binding.addToPlaylistButton.setOnClickListener {
+            if (trackId != null) {
+                val bottomSheetFragment =
+                    PlaylistBottomSheetFragment.newInstance(trackId = trackId!!)
+                bottomSheetFragment.show(
+                    parentFragmentManager,
+                    "PlaylistBottomSheetTag"
+                )
+            }
+        }
+
     }
 
     private fun updateFavoriteButtonState() {

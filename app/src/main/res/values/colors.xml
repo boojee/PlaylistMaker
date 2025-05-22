@@ -24,4 +24,6 @@
     <color name="bottom_nav_selected">@color/color_royal_blue</color>
     <color name="bottom_nav_unselected">@color/color_eerie_black</color>
     <color name="bottom_nav_background">@color/color_white</color>
+    <color name="snackbar_background">@color/color_eerie_black</color>
+    <color name="snackbar_text">@color/color_white</color>
 </resources>

@@ -65,6 +65,6 @@
         android:layout_gravity="center_vertical"
         android:layout_marginStart="@dimen/margin_extra_little"
         android:layout_marginEnd="@dimen/margin_little"
-        android:padding="@dimen/padding_extra_small"
+        android:padding="@dimen/padding_extra_extra_small"
         android:src="@drawable/ic_arrow_forward" />
 </LinearLayout>

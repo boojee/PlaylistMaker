@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bottom_sheet_rounded_corners"
+    android:orientation="vertical"
+    android:padding="@dimen/margin_normal">
+
+    <TextView
+        style="@style/TextViewSearch"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="@string/track_add_to_playlist"
+        android:textSize="@dimen/text_size_big"
+        android:textStyle="bold" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/createPlaylistButton"
+        style="@style/ButtonNewPlaylist"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="@dimen/margin_big"
+        android:text="@string/create_new_playlist" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/playlistRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_big"
+        android:layout_marginBottom="@dimen/margin_normal" />
+</LinearLayout>

@@ -49,3 +49,20 @@ val MIGRATION_1_2 = object : Migration(1, 2) {
         database.execSQL("ALTER TABLE favoriteTracks_new RENAME TO favoriteTracks")
     }
 }
+
+val MIGRATION_2_3 = object : Migration(2, 3) {
+    override fun migrate(database: SupportSQLiteDatabase) {
+        database.execSQL(
+            """
+            CREATE TABLE playlist (
+                playlistId INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+                playlistName TEXT NOT NULL,
+                playlistDescription TEXT NOT NULL,
+                playlistUri TEXT NOT NULL,
+                playlistTrackIds TEXT NOT NULL,
+                playlistTracksCount INTEGER NOT NULL
+            )
+            """.trimIndent()
+        )
+    }
+}

@@ -5,13 +5,20 @@
     android:layout_height="match_parent"
     android:fitsSystemWindows="true">
 
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/bottomNavGuideline"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.92" />
+
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/rootFragmentContainerView"
         android:name="androidx.navigation.fragment.NavHostFragment"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:defaultNavHost="true"
-        app:layout_constraintBottom_toTopOf="@id/bottomNavigationView"
+        app:layout_constraintBottom_toTopOf="@id/divider"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -21,7 +28,6 @@
         android:id="@+id/divider"
         android:layout_width="0dp"
         android:layout_height="1dp"
-        android:layout_marginBottom="@dimen/margin_extra_extra_little"
         android:background="@color/color_silver_foil"
         app:layout_constraintBottom_toTopOf="@id/bottomNavigationView"
         app:layout_constraintEnd_toEndOf="parent"
@@ -30,7 +36,7 @@
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottomNavigationView"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:background="@color/bottom_nav_background"
         app:elevation="0dp"
         app:itemIconTint="@color/bottom_nav_color"
@@ -38,5 +44,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/bottomNavGuideline"
         app:menu="@menu/navigation_items" />
 </androidx.constraintlayout.widget.ConstraintLayout>
