@@ -33,9 +33,15 @@ class PlaylistAdapter(
     ) : RecyclerView.ViewHolder(itemView) {
 
         fun bind(playlist: Playlist) {
+            val playlistImage = itemView.findViewById<ImageView>(R.id.playlist_image)
             itemView.findViewById<TextView>(R.id.playlist_name).text = playlist.playlistName
-            itemView.findViewById<TextView>(R.id.playlist_description).text =
-                playlist.playlistDescription
+
+            val trackCountText = itemView.context.resources.getQuantityString(
+                R.plurals.tracks_count,
+                playlist.playlistTracksCount,
+                playlist.playlistTracksCount
+            )
+            itemView.findViewById<TextView>(R.id.playlist_track_count).text = trackCountText
 
             val imagePath = playlist.playlistUri
             if (imagePath.isNotEmpty()) {
@@ -44,14 +50,12 @@ class PlaylistAdapter(
 
                 if (file.exists()) {
                     val bitmap = BitmapFactory.decodeFile(file.absolutePath)
-                    itemView.findViewById<ImageView>(R.id.playlist_image).setImageBitmap(bitmap)
+                    playlistImage.setImageBitmap(bitmap)
                 } else {
-                    itemView.findViewById<ImageView>(R.id.playlist_image)
-                        .setImageResource(R.drawable.ic_track_placeholder)
+                    playlistImage.setImageResource(R.drawable.ic_track_placeholder)
                 }
             } else {
-                itemView.findViewById<ImageView>(R.id.playlist_image)
-                    .setImageResource(R.drawable.ic_track_placeholder)
+                playlistImage.setImageResource(R.drawable.ic_track_placeholder)
             }
 
             itemView.setOnClickListener {

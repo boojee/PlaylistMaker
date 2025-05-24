@@ -17,4 +17,5 @@
     <color name="bottom_nav_background">@color/color_eerie_black</color>
     <color name="snackbar_background">@color/color_white</color>
     <color name="snackbar_text">@color/color_eerie_black</color>
+    <color name="background_edit_text_title">@color/color_eerie_black</color>
 </resources>

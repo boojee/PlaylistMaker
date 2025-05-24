@@ -33,6 +33,8 @@ class PlaylistBottomSheetFragment : BottomSheetDialogFragment() {
 
     private val playlistBottomSheetViewModel: PlaylistBottomSheetViewModel by viewModel()
 
+    override fun getTheme(): Int = R.style.CustomBottomSheetDialog
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -65,6 +67,8 @@ class PlaylistBottomSheetFragment : BottomSheetDialogFragment() {
             dismiss()
         }
 
+        playlistBottomSheetViewModel.getPlaylist()
+
         playlistBottomSheetViewModel.getPlaylistStateLiveData()
             .observe(viewLifecycleOwner) { playlistState ->
                 when (playlistState) {
@@ -90,11 +94,16 @@ class PlaylistBottomSheetFragment : BottomSheetDialogFragment() {
                                     playlist?.playlistId!!,
                                     trackId!!.toInt()
                                 )
+                                playlistBottomSheetViewModel.getPlaylist()
                             }
                         }
                     }
                 }
             }
     }
-}
 
+    override fun onStart() {
+        super.onStart()
+        playlistBottomSheetViewModel.getPlaylist()
+    }
+}

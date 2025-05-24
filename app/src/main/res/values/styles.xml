@@ -55,6 +55,10 @@
         <item name="android:textCursorDrawable">@drawable/custom_cursor</item>
     </style>
 
+    <style name="EditTextCreatePlaylist" parent="EditText">
+        <item name="android:textColorHint">@color/snackbar_background</item>
+    </style>
+
     <style name="TrackName" parent="TextViewFontWeight">
         <item name="fontFamily">@font/ys_display_regular</item>
         <item name="android:maxLines">1</item>
@@ -124,5 +128,14 @@
         <item name="android:gravity">center</item>
         <item name="android:textAllCaps">false</item>
         <item name="cornerRadius">@dimen/corner_radius_large</item>
+    </style>
+
+    <style name="CustomBottomSheetDialog" parent="Theme.Material3.DayNight.BottomSheetDialog">
+        <item name="shapeAppearanceMediumComponent">@style/RoundedCorners</item>
+    </style>
+
+    <style name="RoundedCorners" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">16dp</item>
     </style>
 </resources>

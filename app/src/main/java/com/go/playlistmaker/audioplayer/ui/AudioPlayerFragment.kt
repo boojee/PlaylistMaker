@@ -211,7 +211,6 @@ class AudioPlayerFragment : Fragment() {
                 )
             }
         }
-
     }
 
     private fun updateFavoriteButtonState() {

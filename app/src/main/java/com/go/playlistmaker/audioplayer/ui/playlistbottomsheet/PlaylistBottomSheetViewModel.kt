@@ -19,6 +19,7 @@ class PlaylistBottomSheetViewModel(private val audioPlayerInteractor: AudioPlaye
     fun updatePlaylistTrackIds(playlistId: Long, trackId: Int){
         viewModelScope.launch {
             audioPlayerInteractor.updatePlaylistTrackIds(playlistId, trackId)
+            getPlaylist()
         }
     }
 

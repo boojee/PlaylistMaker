@@ -8,6 +8,7 @@
         android:id="@+id/playlist_image"
         android:layout_width="@dimen/margin_small_large"
         android:layout_height="@dimen/margin_small_large"
+        android:scaleType="centerCrop"
         android:layout_marginVertical="@dimen/margin_extra_little"
         android:layout_marginStart="@dimen/margin_default"
         android:src="@drawable/ic_track_placeholder" />
@@ -32,6 +33,6 @@
             style="@style/ArtistNameAndTiming"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            tools:text="Artist Name" />
+            tools:text="157 треков" />
     </LinearLayout>
 </LinearLayout>

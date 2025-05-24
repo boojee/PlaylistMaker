@@ -11,12 +11,13 @@ import android.widget.TextView
 import androidx.activity.addCallback
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
+import androidx.core.view.isVisible
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.go.playlistmaker.R
 import com.go.playlistmaker.createplaylist.ui.CreatePlaylistViewModel
-import com.go.playlistmaker.createplaylist.ui.cancelcreateplaylist.CancelCreatingPlaylistBottomSheetFragment
+import com.go.playlistmaker.createplaylist.ui.cancelcreateplaylist.CancelCreatingPlaylistDialogFragment
 import com.go.playlistmaker.databinding.FragmentCreatePlaylistBinding
 import com.go.playlistmaker.playlists.data.db.Playlist
 import com.google.android.material.snackbar.Snackbar
@@ -30,7 +31,7 @@ class CreatePlaylistFragment : Fragment() {
         const val CANCEL_PLAYLIST_REQUEST_KEY = "cancel_playlist_request_key"
     }
 
-    private var hasTextName = false
+    private var hasValidName = false
     private var hasDescriptionText = false
     private var hasImagePlaylist = false
     private var playlistName = ""
@@ -48,8 +49,10 @@ class CreatePlaylistFragment : Fragment() {
                 hasImagePlaylist = true
                 playlistImageUri = Uri.fromFile(File(savedPath))
                 binding.imageContainer.setImageURI(playlistImageUri)
+                buttonChangedAction()
             } else {
                 hasImagePlaylist = false
+                buttonChangedAction()
             }
         }
     }
@@ -82,43 +85,47 @@ class CreatePlaylistFragment : Fragment() {
             pickImage.launch("image/*")
         }
         binding.backButton.setOnClickListener {
-            if (hasTextName || hasDescriptionText || hasImagePlaylist) {
+            if (hasValidName || hasDescriptionText || hasImagePlaylist) {
                 openBottomSheetCancelCreatingPlaylist()
             } else {
                 findNavController().popBackStack()
             }
         }
         binding.createButton.setOnClickListener {
-            createPlaylistViewModel.insertPlaylist(
-                Playlist(
-                    playlistName = playlistName,
-                    playlistDescription = playlistDescription,
-                    playlistUri = playlistImageUri.toString(),
-                    playlistTrackIds = emptyList(),
-                    playlistTracksCount = 0
-                )
-            )
-            findNavController().popBackStack()
-            val text = requireContext().resources.getString(R.string.playlist_created, playlistName)
-            Snackbar.make(view, text, Snackbar.LENGTH_SHORT)
-                .setBackgroundTint(
-                    ContextCompat.getColor(
-                        requireContext(),
-                        R.color.snackbar_background
+            val trimmedName = playlistName.trim()
+            if (trimmedName.isNotEmpty()) {
+                createPlaylistViewModel.insertPlaylist(
+                    Playlist(
+                        playlistName = playlistName,
+                        playlistDescription = playlistDescription,
+                        playlistUri = playlistImageUri.toString(),
+                        playlistTrackIds = emptyList(),
+                        playlistTracksCount = 0
                     )
                 )
-                .setTextColor(ContextCompat.getColor(requireContext(), R.color.snackbar_text))
-                .apply {
-                    val snackbarView = this.view
-                    val textView =
-                        snackbarView.findViewById<TextView>(com.google.android.material.R.id.snackbar_text)
-                    textView.textAlignment = View.TEXT_ALIGNMENT_CENTER
-                }
-                .show()
+                findNavController().popBackStack()
+                val text =
+                    requireContext().resources.getString(R.string.playlist_created, playlistName)
+                Snackbar.make(view, text, Snackbar.LENGTH_SHORT)
+                    .setBackgroundTint(
+                        ContextCompat.getColor(
+                            requireContext(),
+                            R.color.snackbar_background
+                        )
+                    )
+                    .setTextColor(ContextCompat.getColor(requireContext(), R.color.snackbar_text))
+                    .apply {
+                        val snackbarView = this.view
+                        val textView =
+                            snackbarView.findViewById<TextView>(com.google.android.material.R.id.snackbar_text)
+                        textView.textAlignment = View.TEXT_ALIGNMENT_CENTER
+                    }
+                    .show()
+            }
         }
 
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
-            if (hasTextName || hasDescriptionText || hasImagePlaylist) {
+            if (hasValidName || hasDescriptionText || hasImagePlaylist) {
                 openBottomSheetCancelCreatingPlaylist()
             } else {
                 findNavController().popBackStack()
@@ -147,15 +154,17 @@ class CreatePlaylistFragment : Fragment() {
     private fun textNameAndDescriptionListener() {
         binding.apply {
             editTextTitle.doOnTextChanged { text, _, _, count ->
-                hasTextName = count != 0
-                buttonChangedAction()
+                val hasText = count != 0
+                val isValidName = playlistName.trim().isNotEmpty()
                 playlistName = text.toString()
-                editTextHasFocus(count != 0, editTextTitle)
+                hasValidName = isValidName
+                buttonChangedAction()
+                editTextHasFocus(hasText, editTextTitle, true)
             }
             editTextDescription.doOnTextChanged { text, _, _, count ->
                 hasDescriptionText = count != 0
                 playlistDescription = text.toString()
-                editTextHasFocus(count != 0, editTextDescription)
+                editTextHasFocus(count != 0, editTextDescription, false)
             }
         }
     }
@@ -163,24 +172,37 @@ class CreatePlaylistFragment : Fragment() {
     private fun textNameAndDescriptionChangeFocusListener() {
         binding.apply {
             editTextTitle.setOnFocusChangeListener { _, hasFocus ->
-                editTextHasFocus((hasFocus || hasTextName), editTextTitle)
+                val hasText = playlistName.isNotEmpty()
+                editTextHasFocus((hasFocus || hasText), editTextTitle, true)
             }
             editTextDescription.setOnFocusChangeListener { _, hasFocus ->
-                editTextHasFocus((hasFocus || hasDescriptionText), editTextDescription)
+                editTextHasFocus((hasFocus || hasDescriptionText), editTextDescription, false)
             }
         }
     }
 
-    private fun editTextHasFocus(hasFocus: Boolean, editText: EditText) {
+    private fun editTextHasFocus(hasFocus: Boolean, editText: EditText, isTitle: Boolean) {
         if (hasFocus) {
             editText.setBackgroundResource(R.drawable.background_text_field_outline_active)
+            if (isTitle) {
+                binding.editTextFieldName.isVisible = true
+            } else {
+                binding.editTextFieldDescription.isVisible = true
+            }
         } else {
             editText.setBackgroundResource(R.drawable.background_text_field_outline_inactive)
+            if (isTitle) {
+                binding.editTextFieldName.isVisible = false
+            } else {
+                binding.editTextFieldDescription.isVisible = false
+            }
+
         }
     }
 
     private fun buttonChangedAction() {
-        if (hasTextName) {
+        binding.createButton.isEnabled = hasValidName
+        if (hasValidName) {
             binding.createButton.setBackgroundColor(this.resources.getColor(R.color.color_royal_blue))
         } else {
             binding.createButton.setBackgroundColor(this.resources.getColor(R.color.color_silver_foil))
@@ -188,7 +210,7 @@ class CreatePlaylistFragment : Fragment() {
     }
 
     private fun openBottomSheetCancelCreatingPlaylist() {
-        val bottomSheetFragment = CancelCreatingPlaylistBottomSheetFragment()
+        val bottomSheetFragment = CancelCreatingPlaylistDialogFragment()
         bottomSheetFragment.show(
             parentFragmentManager,
             "CancelCreatingPlaylistBottomSheetTag"
