@@ -31,6 +31,21 @@
         <item name="android:textSize">@dimen/text_size_default</item>
     </style>
 
+    <style name="EditText" parent="TextViewFontWeight">
+        <item name="android:background">@drawable/rounded_edittext</item>
+        <item name="android:inputType">text</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:textColorHint">@color/search_hint</item>
+        <item name="android:textSize">@dimen/text_size_default</item>
+        <item name="android:textColor">@color/color_eerie_black</item>
+        <item name="android:textCursorDrawable">@drawable/custom_cursor</item>
+    </style>
+
+    <style name="EditTextCreatePlaylist" parent="EditText">
+        <item name="android:textColorHint">@color/snackbar_background</item>
+        <item name="android:textColor">@color/color_white</item>
+    </style>
+
     <style name="ButtonSearchError">
         <item name="android:textSize">@dimen/text_size_little</item>
         <item name="android:backgroundTint">@color/color_white</item>

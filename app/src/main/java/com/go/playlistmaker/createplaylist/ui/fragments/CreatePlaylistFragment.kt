@@ -96,7 +96,7 @@ class CreatePlaylistFragment : Fragment() {
             if (trimmedName.isNotEmpty()) {
                 createPlaylistViewModel.insertPlaylist(
                     Playlist(
-                        playlistName = playlistName,
+                        playlistName = trimmedName,
                         playlistDescription = playlistDescription,
                         playlistUri = playlistImageUri.toString(),
                         playlistTrackIds = emptyList(),
@@ -154,12 +154,12 @@ class CreatePlaylistFragment : Fragment() {
     private fun textNameAndDescriptionListener() {
         binding.apply {
             editTextTitle.doOnTextChanged { text, _, _, count ->
-                val hasText = count != 0
-                val isValidName = playlistName.trim().isNotEmpty()
+                val trimmedText = text?.toString()?.trim() ?: ""
+                val isValidName = trimmedText.isNotEmpty()
                 playlistName = text.toString()
                 hasValidName = isValidName
                 buttonChangedAction()
-                editTextHasFocus(hasText, editTextTitle, true)
+                editTextHasFocus(count != 0, editTextTitle, true)
             }
             editTextDescription.doOnTextChanged { text, _, _, count ->
                 hasDescriptionText = count != 0
