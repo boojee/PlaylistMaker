@@ -2,16 +2,20 @@ package com.go.playlistmaker.audioplayer.data
 
 import android.media.MediaPlayer
 import com.go.playlistmaker.audioplayer.domain.api.AudioPlayerRepository
+import com.go.playlistmaker.playlists.data.db.Playlist
+import com.go.playlistmaker.playlists.data.db.PlaylistDao
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Locale
 
 class AudioPlayerRepositoryImpl(
     private var mediaPlayer: MediaPlayer,
-    private var scope: CoroutineScope
+    private var scope: CoroutineScope,
+    private val playlistDao: PlaylistDao
 ) : AudioPlayerRepository {
 
     private var timerJob: Job? = null
@@ -44,6 +48,16 @@ class AudioPlayerRepositoryImpl(
         mediaPlayer.release()
     }
 
+    override suspend fun updatePlaylistTrackIds(playlistId: Long, trackId: Int) {
+        playlistDao.updatePlaylistTrackIds(playlistId, trackId)
+    }
+
+    override suspend fun checkContainsTrackIdInPlaylist(
+        playlistId: Long,
+        trackId: Long
+    ): Flow<Boolean> =
+        playlistDao.checkContainsTrackIdInPlaylist(playlistId, trackId)
+
     private fun startUpdatingTime(callback: AudioPlayerRepository.TimeUpdateCallback) {
         if (isUpdatingTime) return
         isUpdatingTime = true
@@ -63,4 +77,6 @@ class AudioPlayerRepositoryImpl(
         isUpdatingTime = false
         timerJob?.cancel()
     }
+
+    override fun getPlaylist(): Flow<List<Playlist>> = playlistDao.getPlaylist()
 }

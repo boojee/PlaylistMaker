@@ -1,12 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="text_size_small">11sp</dimen>
+    <dimen name="text_size_extra_small">11sp</dimen>
+    <dimen name="text_size_small">12sp</dimen>
     <dimen name="text_size_normal">13sp</dimen>
     <dimen name="text_size_little">14sp</dimen>
     <dimen name="text_size_default">16sp</dimen>
     <dimen name="text_size_medium">19sp</dimen>
+    <dimen name="text_size_big">19sp</dimen>
+    <dimen name="text_size_huge">20sp</dimen>
     <dimen name="text_size_large">22sp</dimen>
 
+    <dimen name="margin_super_small">2dp</dimen>
     <dimen name="margin_extra_extra_small">4dp</dimen>
     <dimen name="margin_extra_small">5dp</dimen>
     <dimen name="margin_extra_extra_little">6dp</dimen>
@@ -27,8 +31,10 @@
     <dimen name="margin_huge">96dp</dimen>
     <dimen name="margin_extra_huge">106dp</dimen>
 
-    <dimen name="padding_extra_extra_small">2dp</dimen>
-    <dimen name="padding_extra_small">8dp</dimen>
+    <dimen name="padding_super_small">2dp</dimen>
+    <dimen name="padding_super_extra_small">4dp</dimen>
+    <dimen name="padding_extra_extra_small">8dp</dimen>
+    <dimen name="padding_extra_small">12dp</dimen>
     <dimen name="padding_small">14dp</dimen>
     <dimen name="padding_little">16dp</dimen>
     <dimen name="padding_default">18dp</dimen>
