@@ -2,6 +2,7 @@ package com.go.playlistmaker.audioplayer.data
 
 import android.media.MediaPlayer
 import com.go.playlistmaker.audioplayer.domain.api.AudioPlayerRepository
+import com.go.playlistmaker.playlistdetails.data.db.Track
 import com.go.playlistmaker.playlists.data.db.Playlist
 import com.go.playlistmaker.playlists.data.db.PlaylistDao
 import kotlinx.coroutines.CoroutineScope
@@ -79,4 +80,7 @@ class AudioPlayerRepositoryImpl(
     }
 
     override fun getPlaylist(): Flow<List<Playlist>> = playlistDao.getPlaylist()
+    override suspend fun insertTrack(track: Track) {
+        playlistDao.insertTrack(track)
+    }
 }

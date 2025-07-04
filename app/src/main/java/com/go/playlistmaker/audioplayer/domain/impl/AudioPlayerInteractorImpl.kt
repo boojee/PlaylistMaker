@@ -2,6 +2,7 @@ package com.go.playlistmaker.audioplayer.domain.impl
 
 import com.go.playlistmaker.audioplayer.domain.api.AudioPlayerInteractor
 import com.go.playlistmaker.audioplayer.domain.api.AudioPlayerRepository
+import com.go.playlistmaker.playlistdetails.data.db.Track
 import com.go.playlistmaker.playlists.data.db.Playlist
 import kotlinx.coroutines.flow.Flow
 import java.util.concurrent.Executors
@@ -45,5 +46,9 @@ class AudioPlayerInteractorImpl(private val audioPlayerRepository: AudioPlayerRe
 
     override fun getPlaylist(): Flow<List<Playlist>> {
         return audioPlayerRepository.getPlaylist()
+    }
+
+    override suspend fun insertTrack(track: Track) {
+        audioPlayerRepository.insertTrack(track)
     }
 }

@@ -36,6 +36,9 @@
         <action
             android:id="@+id/action_libraryFragment_to_favoritesFragment"
             app:destination="@id/favoritesFragment" />
+        <action
+            android:id="@+id/action_libraryFragment_to_playlistDetailsFragment"
+            app:destination="@id/playlistDetailsFragment" />
     </fragment>
     <fragment
         android:id="@+id/favoritesFragment"
@@ -49,4 +52,12 @@
         android:id="@+id/createPlaylistFragment"
         android:name="com.go.playlistmaker.createplaylist.ui.fragments.CreatePlaylistFragment"
         android:label="CreatePlaylistFragment" />
+    <fragment
+        android:id="@+id/playlistDetailsFragment"
+        android:name="com.go.playlistmaker.playlistdetails.ui.fragments.PlaylistDetailsFragment"
+        android:label="PlaylistDetailsFragment" >
+        <action
+            android:id="@+id/action_playlistDetailsFragment_to_audioPlayerFragment"
+            app:destination="@id/audioPlayerFragment" />
+    </fragment>
 </navigation>

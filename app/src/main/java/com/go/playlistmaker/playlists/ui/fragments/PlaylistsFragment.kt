@@ -4,12 +4,13 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.go.playlistmaker.R
+import com.go.playlistmaker.createplaylist.ui.fragments.CreatePlaylistFragment
 import com.go.playlistmaker.databinding.FragmentPlaylistsBinding
+import com.go.playlistmaker.playlistdetails.ui.fragments.PlaylistDetailsFragment
 import com.go.playlistmaker.playlists.ui.PlaylistAdapter
 import com.go.playlistmaker.playlists.ui.PlaylistsViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -20,8 +21,15 @@ class PlaylistsFragment : Fragment() {
     private lateinit var binding: FragmentPlaylistsBinding
 
     private val adapter = PlaylistAdapter { playlist ->
-        Toast.makeText(requireContext(), "Clicked: ${playlist.playlistName}", Toast.LENGTH_SHORT)
-            .show()
+        findNavController().navigate(
+            R.id.playlistDetailsFragment,
+            PlaylistDetailsFragment.createArgs(
+                playlistId = playlist.playlistId,
+                tracksIds = playlist.playlistTrackIds.map { track -> track.toLong() },
+                playlistName = playlist.playlistName,
+                playlistDescription = playlist.playlistDescription
+            )
+        )
     }
 
     override fun onCreateView(
@@ -32,7 +40,10 @@ class PlaylistsFragment : Fragment() {
 
 
         binding.buttonNewPlaylist.setOnClickListener {
-            findNavController().navigate(R.id.createPlaylistFragment)
+            findNavController().navigate(
+                R.id.createPlaylistFragment,
+                CreatePlaylistFragment.createArgs(true)
+            )
         }
         return binding.root
     }

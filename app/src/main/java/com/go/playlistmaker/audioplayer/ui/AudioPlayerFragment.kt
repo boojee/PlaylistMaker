@@ -204,7 +204,19 @@ class AudioPlayerFragment : Fragment() {
         binding.addToPlaylistButton.setOnClickListener {
             if (trackId != null) {
                 val bottomSheetFragment =
-                    PlaylistBottomSheetFragment.newInstance(trackId = trackId!!)
+                    PlaylistBottomSheetFragment.newInstance(
+                        trackId = trackId!!,
+                        trackName = trackName.orEmpty(),
+                        artistName = artistName.orEmpty(),
+                        trackTimeMillis = trackTimeMillis.orEmpty(),
+                        artworkUrl100 = artworkUrl100.orEmpty(),
+                        collectionName = collectionName.orEmpty(),
+                        releaseDate = releaseDate.orEmpty(),
+                        primaryGenreName = primaryGenreName.orEmpty(),
+                        country = country.orEmpty(),
+                        previewUrl = previewUrl.orEmpty(),
+                        isFavorite = isFavorite ?: false
+                    )
                 bottomSheetFragment.show(
                     parentFragmentManager,
                     "PlaylistBottomSheetTag"

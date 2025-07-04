@@ -5,26 +5,31 @@
     <dimen name="text_size_normal">13sp</dimen>
     <dimen name="text_size_little">14sp</dimen>
     <dimen name="text_size_default">16sp</dimen>
+    <dimen name="text_size_regular">18sp</dimen>
     <dimen name="text_size_medium">19sp</dimen>
     <dimen name="text_size_big">19sp</dimen>
     <dimen name="text_size_huge">20sp</dimen>
     <dimen name="text_size_large">22sp</dimen>
+    <dimen name="text_size_extra_large">24sp</dimen>
 
     <dimen name="margin_super_small">2dp</dimen>
     <dimen name="margin_extra_extra_small">4dp</dimen>
     <dimen name="margin_extra_small">5dp</dimen>
     <dimen name="margin_extra_extra_little">6dp</dimen>
     <dimen name="margin_extra_little">8dp</dimen>
+    <dimen name="margin_extra_lil">9dp</dimen>
     <dimen name="margin_small">10dp</dimen>
     <dimen name="margin_little">12dp</dimen>
     <dimen name="margin_default">14dp</dimen>
     <dimen name="margin_normal">16dp</dimen>
+    <dimen name="margin_norm">18dp</dimen>
     <dimen name="margin_medium">20dp</dimen>
     <dimen name="margin_big">24dp</dimen>
     <dimen name="margin_extra_big">28dp</dimen>
     <dimen name="margin_biggest">30dp</dimen>
     <dimen name="margin_extra_biggest">36dp</dimen>
     <dimen name="margin_extra_extra_biggest">38dp</dimen>
+    <dimen name="margin_extra_extra_big">42dp</dimen>
     <dimen name="margin_small_large">46dp</dimen>
     <dimen name="margin_large">50dp</dimen>
     <dimen name="margin_extra_large">52dp</dimen>
@@ -34,6 +39,7 @@
     <dimen name="padding_super_small">2dp</dimen>
     <dimen name="padding_super_extra_small">4dp</dimen>
     <dimen name="padding_extra_extra_small">8dp</dimen>
+    <dimen name="padding_norm">10dp</dimen>
     <dimen name="padding_extra_small">12dp</dimen>
     <dimen name="padding_small">14dp</dimen>
     <dimen name="padding_little">16dp</dimen>
@@ -49,4 +55,6 @@
     <dimen name="icon_padding_default">10dp</dimen>
 
     <dimen name="cursor_width_default">2dp</dimen>
+
+    <dimen name="peak_height">240dp</dimen>
 </resources>
