@@ -11,13 +11,12 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.go.playlistmaker.R
-import com.go.playlistmaker.playlistdetails.data.db.Track
-
+import com.go.playlistmaker.searchtrack.domain.models.TrackDomain
 
 class TrackAdapter(
-    private val onTrackClick: (Track) -> Unit = {},
-    private val onTrackLongClick: (Track) -> Unit = {}
-) : ListAdapter<Track, TrackAdapter.TrackViewHolder>(TrackDiffCallback()) {
+    private val onTrackClick: (TrackDomain) -> Unit = {},
+    private val onTrackLongClick: (TrackDomain) -> Unit = {}
+) : ListAdapter<TrackDomain, TrackAdapter.TrackViewHolder>(TrackDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TrackViewHolder {
         val view = LayoutInflater.from(parent.context)
@@ -31,8 +30,8 @@ class TrackAdapter(
 
     class TrackViewHolder(
         itemView: View,
-        private val onTrackClick: (Track) -> Unit,
-        private val onTrackLongClick: (Track) -> Unit
+        private val onTrackClick: (TrackDomain) -> Unit,
+        private val onTrackLongClick: (TrackDomain) -> Unit
     ) : RecyclerView.ViewHolder(itemView) {
 
         private val albumIcon: ImageView = itemView.findViewById(R.id.album_cover)
@@ -40,7 +39,7 @@ class TrackAdapter(
         private val artistName: TextView = itemView.findViewById(R.id.artist_name)
         private val trackTime: TextView = itemView.findViewById(R.id.track_time)
 
-        fun bind(track: Track) {
+        fun bind(track: TrackDomain) {
             itemView.apply {
                 trackName.text = track.trackName
                 artistName.text = track.artistName
@@ -63,12 +62,12 @@ class TrackAdapter(
         }
     }
 
-class TrackDiffCallback : DiffUtil.ItemCallback<Track>() {
-    override fun areItemsTheSame(oldItem: Track, newItem: Track): Boolean {
+class TrackDiffCallback : DiffUtil.ItemCallback<TrackDomain>() {
+    override fun areItemsTheSame(oldItem: TrackDomain, newItem: TrackDomain): Boolean {
         return oldItem.trackId == newItem.trackId
     }
 
-    override fun areContentsTheSame(oldItem: Track, newItem: Track): Boolean {
+    override fun areContentsTheSame(oldItem: TrackDomain, newItem: TrackDomain): Boolean {
         return oldItem == newItem
     }
 }

@@ -4,15 +4,15 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.go.playlistmaker.R
-import com.go.playlistmaker.searchtrack.domain.models.Track
+import com.go.playlistmaker.searchtrack.domain.models.TrackDomain
 
-class TrackAdapter(private val onTrackClick: (Track) -> Unit) :
+class TrackAdapter(private val onTrackClick: (TrackDomain) -> Unit) :
     RecyclerView.Adapter<TrackViewHolder>() {
 
-    private var tracks: List<Track> = mutableListOf()
+    private var trackDomains: List<TrackDomain> = mutableListOf()
 
-    fun setItems(tracks: List<Track>) {
-        this.tracks = tracks
+    fun setItems(trackDomains: List<TrackDomain>) {
+        this.trackDomains = trackDomains
         notifyDataSetChanged()
     }
 
@@ -23,7 +23,7 @@ class TrackAdapter(private val onTrackClick: (Track) -> Unit) :
     }
 
     override fun onBindViewHolder(holder: TrackViewHolder, position: Int) {
-        val track = tracks[position]
+        val track = trackDomains[position]
         holder.bind(track)
 
         holder.itemView.setOnClickListener {
@@ -32,6 +32,6 @@ class TrackAdapter(private val onTrackClick: (Track) -> Unit) :
     }
 
     override fun getItemCount(): Int {
-        return tracks.size
+        return trackDomains.size
     }
 }

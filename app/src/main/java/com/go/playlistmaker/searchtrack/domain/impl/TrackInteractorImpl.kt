@@ -2,14 +2,14 @@ package com.go.playlistmaker.searchtrack.domain.impl
 
 import com.go.playlistmaker.searchtrack.domain.api.TrackInteractor
 import com.go.playlistmaker.searchtrack.domain.api.TrackRepository
-import com.go.playlistmaker.searchtrack.domain.models.Track
+import com.go.playlistmaker.searchtrack.domain.models.TrackDomain
 import com.go.playlistmaker.searchtrack.util.Resource
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
 class TrackInteractorImpl(private val trackRepository: TrackRepository) : TrackInteractor {
 
-    override fun findMusic(expression: String): Flow<Pair<List<Track>?, String?>> {
+    override fun findMusic(expression: String): Flow<Pair<List<TrackDomain>?, String?>> {
         return trackRepository.findMusic(expression).map { result ->
             when (result) {
                 is Resource.Success -> {
@@ -23,12 +23,12 @@ class TrackInteractorImpl(private val trackRepository: TrackRepository) : TrackI
         }
     }
 
-    override fun findMusicHistory(): Flow<List<Track>> {
+    override fun findMusicHistory(): Flow<List<TrackDomain>> {
         return trackRepository.findMusicHistory()
     }
 
-    override suspend fun addMusicHistory(track: Track) {
-        trackRepository.addMusicHistory(track)
+    override suspend fun addMusicHistory(trackDomain: TrackDomain) {
+        trackRepository.addMusicHistory(trackDomain)
     }
 
     override fun clearHistory() {

@@ -18,7 +18,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.go.playlistmaker.R
-import com.go.playlistmaker.searchtrack.domain.models.Track
+import com.go.playlistmaker.searchtrack.domain.models.TrackDomain
 import com.go.playlistmaker.audioplayer.ui.AudioPlayerFragment
 import com.go.playlistmaker.databinding.FragmentSearchBinding
 import com.go.playlistmaker.searchtrack.ui.adapters.TrackAdapter
@@ -38,7 +38,7 @@ class SearchFragment : Fragment() {
     private lateinit var binding: FragmentSearchBinding
 
     private var editTextContent: String? = null
-    private val musicList: MutableList<Track> = mutableListOf()
+    private val musicList: MutableList<TrackDomain> = mutableListOf()
     private var lastSearchQuery: String? = null
     private var isLastRequestFailed: Boolean = false
     private var isClickAllowed = true
@@ -204,7 +204,7 @@ class SearchFragment : Fragment() {
         trackSearchViewModel.findMusic(lastSearchQuery.orEmpty())
     }
 
-    private fun isVisibleHistoryMusicList(foundMusicHistory: List<Track>) {
+    private fun isVisibleHistoryMusicList(foundMusicHistory: List<TrackDomain>) {
         if (binding.editTextSearch.hasFocus() && binding.editTextSearch.text.isNullOrEmpty() && foundMusicHistory.isNotEmpty()) {
             binding.searchTextViewForHistory.isVisible = true
             binding.buttonClearSearchHistory.isVisible = true
@@ -215,7 +215,7 @@ class SearchFragment : Fragment() {
         }
     }
 
-    private fun stateMusicList(foundMusic: List<Track>) {
+    private fun stateMusicList(foundMusic: List<TrackDomain>) {
         binding.progressBar.isVisible = false
         if (foundMusic.isNotEmpty()) {
             musicList.addAll(foundMusic)

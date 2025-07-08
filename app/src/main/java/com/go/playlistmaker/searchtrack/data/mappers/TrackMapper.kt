@@ -2,13 +2,14 @@ package com.go.playlistmaker.searchtrack.data.mappers
 
 import com.go.playlistmaker.common.utils.TimeUtils.getSimpleDateFormatMmSs
 import com.go.playlistmaker.favorites.data.db.TrackFavorite
+import com.go.playlistmaker.playlistdetails.data.db.Track
 import com.go.playlistmaker.searchtrack.data.dto.TrackDto
-import com.go.playlistmaker.searchtrack.domain.models.Track
+import com.go.playlistmaker.searchtrack.domain.models.TrackDomain
 
 object TrackMapper {
 
-    fun toTrack(trackDto: TrackDto): Track {
-        return Track(
+    fun toTrack(trackDto: TrackDto): TrackDomain {
+        return TrackDomain(
             trackId = trackDto.trackId ?: 0L,
             trackName = trackDto.trackName.orEmpty(),
             artistName = trackDto.artistName.orEmpty(),
@@ -23,8 +24,24 @@ object TrackMapper {
         )
     }
 
-    fun trackFavoriteToTrack(trackFavorite: TrackFavorite): Track {
-        return Track(
+    fun toTrack(track: Track): TrackDomain {
+        return TrackDomain(
+            trackId = track.trackId,
+            trackName = track.trackName,
+            artistName = track.artistName,
+            trackTimeMillis = track.trackTimeMillis,
+            artworkUrl100 = track.artworkUrl100,
+            collectionName = track.collectionName,
+            releaseDate = track.releaseDate,
+            primaryGenreName = track.primaryGenreName,
+            country = track.country,
+            previewUrl = track.previewUrl,
+            isFavorite = track.isFavorite
+        )
+    }
+
+    fun trackFavoriteToTrack(trackFavorite: TrackFavorite): TrackDomain {
+        return TrackDomain(
             trackId = trackFavorite.trackId,
             trackName = trackFavorite.trackName,
             artistName = trackFavorite.artistName,

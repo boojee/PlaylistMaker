@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
@@ -13,14 +14,15 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.go.playlistmaker.R
 import com.go.playlistmaker.audioplayer.ui.AudioPlayerFragment
 import com.go.playlistmaker.databinding.FragmentViewPlaylistBinding
-import com.go.playlistmaker.playlistdetails.data.db.Track
 import com.go.playlistmaker.playlistdetails.ui.PlaylistDetailsState
 import com.go.playlistmaker.playlistdetails.ui.PlaylistDetailsViewModel
 import com.go.playlistmaker.playlistdetails.ui.TrackAdapter
 import com.go.playlistmaker.playlistdetails.ui.models.TrackModel
 import com.go.playlistmaker.playlistdetails.ui.playlistoptionsbottomsheet.PlaylistOptionsBottomSheetFragment
 import com.go.playlistmaker.playlistdetails.ui.playlistviewbottomsheet.DeleteTrackDialogFragment
+import com.go.playlistmaker.searchtrack.domain.models.TrackDomain
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.snackbar.Snackbar
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.io.File
 
@@ -62,7 +64,7 @@ class PlaylistDetailsFragment : Fragment() {
     private var trackInfoList: List<TrackModel>? = null
 
     private val adapter = TrackAdapter(
-        onTrackClick = { track: Track ->
+        onTrackClick = { track: TrackDomain ->
             findNavController().navigate(
                 R.id.audioPlayerFragment,
                 AudioPlayerFragment.createArgs(
@@ -191,17 +193,25 @@ class PlaylistDetailsFragment : Fragment() {
                                     trackTime = track.trackTimeMillis
                                 )
                             }
-                            val message = createShareMessage(
-                                playlistNameArg.orEmpty(),
-                                playlistDescriptionArg.orEmpty(),
-                                tracksToShare.size,
-                                tracksToShare
-                            )
-                            val sendMessage = Intent(Intent.ACTION_SEND)
-                            sendMessage.type = "text/plain"
-                            sendMessage.putExtra(Intent.EXTRA_TEXT, message)
-                            val shareIntent = Intent.createChooser(sendMessage, null)
-                            startActivity(shareIntent)
+
+                            if (tracksToShare.isEmpty()) {
+                                Toast.makeText(
+                                    requireContext(), R.string.track_share_is_empty,
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            } else {
+                                val message = createShareMessage(
+                                    playlistNameArg.orEmpty(),
+                                    playlistDescriptionArg.orEmpty(),
+                                    tracksToShare.size,
+                                    tracksToShare
+                                )
+                                val sendMessage = Intent(Intent.ACTION_SEND)
+                                sendMessage.type = "text/plain"
+                                sendMessage.putExtra(Intent.EXTRA_TEXT, message)
+                                val shareIntent = Intent.createChooser(sendMessage, null)
+                                startActivity(shareIntent)
+                            }
                         }
 
                         playlistOptions.setOnClickListener {
@@ -223,8 +233,20 @@ class PlaylistDetailsFragment : Fragment() {
                 }
 
                 is PlaylistDetailsState.TracksDetails -> {
-                    val tracks = state.tracks
+                    val tracks = state.trackDomains
                     val localTracks: MutableList<TrackModel> = mutableListOf()
+
+                    binding.apply {
+                        if (tracks.isEmpty()) {
+                            Snackbar.make(
+                                binding.root,
+                                R.string.no_track_in_playlist,
+                                Snackbar.LENGTH_SHORT
+                            ).show()
+                        }
+
+                        adapter.submitList(tracks)
+                    }
 
                     tracks.map { track ->
                         localTracks.add(
@@ -236,10 +258,6 @@ class PlaylistDetailsFragment : Fragment() {
                         )
                     }
                     trackList = localTracks
-
-                    binding.apply {
-                        adapter.submitList(tracks)
-                    }
                 }
             }
         }

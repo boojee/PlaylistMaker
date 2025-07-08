@@ -3,7 +3,7 @@ package com.go.playlistmaker.favorites.domain.impl
 import com.go.playlistmaker.favorites.data.db.TrackFavorite
 import com.go.playlistmaker.favorites.domain.api.TrackFavoriteInteractor
 import com.go.playlistmaker.favorites.domain.api.TrackFavoriteRepository
-import com.go.playlistmaker.searchtrack.domain.models.Track
+import com.go.playlistmaker.searchtrack.domain.models.TrackDomain
 import kotlinx.coroutines.flow.Flow
 
 class TrackFavoriteInteractorImpl(private val trackFavoriteRepository: TrackFavoriteRepository) :
@@ -17,7 +17,7 @@ class TrackFavoriteInteractorImpl(private val trackFavoriteRepository: TrackFavo
         trackFavoriteRepository.delete(item)
     }
 
-    override fun getAllItem(): Flow<List<Track>> {
+    override fun getAllItem(): Flow<List<TrackDomain>> {
         return trackFavoriteRepository.getAllItem()
     }
 

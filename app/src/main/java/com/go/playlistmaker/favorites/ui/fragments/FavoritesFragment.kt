@@ -14,7 +14,7 @@ import com.go.playlistmaker.audioplayer.ui.AudioPlayerFragment
 import com.go.playlistmaker.databinding.FragmentFavoritesBinding
 import com.go.playlistmaker.favorites.ui.FavoritesViewModel
 import com.go.playlistmaker.favorites.ui.TrackFavoriteState
-import com.go.playlistmaker.searchtrack.domain.models.Track
+import com.go.playlistmaker.searchtrack.domain.models.TrackDomain
 import com.go.playlistmaker.searchtrack.ui.adapters.TrackAdapter
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -43,7 +43,7 @@ class FavoritesFragment : Fragment() {
             .observe(viewLifecycleOwner) { trackFavoriteState ->
                 when (trackFavoriteState) {
                     is TrackFavoriteState.TrackFavoriteList -> stateTrackFavoriteList(
-                        trackFavoriteState.trackFavoriteList
+                        trackFavoriteState.trackDomainFavoriteList
                     )
                 }
             }
@@ -52,7 +52,7 @@ class FavoritesFragment : Fragment() {
 
     }
 
-    private fun stateTrackFavoriteList(foundTracksFavorite: List<Track>) {
+    private fun stateTrackFavoriteList(foundTracksFavorite: List<TrackDomain>) {
         if (foundTracksFavorite.isEmpty()) {
             binding.errorIcon.isVisible = true
             binding.placeholderMessage.isVisible = true

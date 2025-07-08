@@ -8,8 +8,8 @@ import androidx.room.Transaction
 import androidx.room.Update
 import com.go.playlistmaker.playlistdetails.data.db.Track
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.flow
 
@@ -62,7 +62,9 @@ interface PlaylistDao {
     suspend fun deletePlaylistById(playlistId: Long)
 
     suspend fun deleteTrackFromPlaylist(playlistId: Long, trackId: Int): Flow<List<Track>> {
-        return getPlaylistById(playlistId).flatMapLatest { playlist ->
+        return flow {
+            val playlist = getPlaylistById(playlistId).first()
+
             val currentTrackIds = playlist.playlistTrackIds.toMutableList()
             currentTrackIds.remove(trackId)
 
@@ -82,11 +84,19 @@ interface PlaylistDao {
 
             update(updatedPlaylist)
 
+            val allPlaylists = getPlaylist().first()
+            val isUsedInOtherPlaylists = allPlaylists.any { otherPlaylist ->
+                otherPlaylist.playlistId != playlistId && trackId in otherPlaylist.playlistTrackIds
+            }
+
+            if (!isUsedInOtherPlaylists) {
+                deleteTrackById(trackId.toLong())
+            }
+
             if (currentTrackIds.isEmpty()) {
-                flow { emit(emptyList()) }
+                emit(emptyList())
             } else {
-                val trackIds = currentTrackIds.map { trackId -> trackId.toLong() }
-                getTracksByIds(trackIds)
+                emitAll(getTracksByIds(currentTrackIds.map { it.toLong() }))
             }
         }
     }

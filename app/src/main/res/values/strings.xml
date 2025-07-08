@@ -56,4 +56,5 @@
     <string name="dialog_yes">Да</string>
     <string name="dialog_no">Нет</string>
     <string name="playlist_edit_title">Редактировать</string>
+    <string name="no_track_in_playlist">В этом плейлисте нет треков</string>
 </resources>

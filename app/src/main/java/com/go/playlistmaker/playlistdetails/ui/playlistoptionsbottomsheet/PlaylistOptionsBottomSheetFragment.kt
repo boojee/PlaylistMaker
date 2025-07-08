@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.core.os.bundleOf
 import androidx.navigation.fragment.findNavController
 import com.go.playlistmaker.R
@@ -129,17 +130,25 @@ class PlaylistOptionsBottomSheetFragment : BottomSheetDialogFragment() {
                 openDeletePlaylistDialog()
             }
             buttonShare.setOnClickListener {
-                val message = createShareMessage(
-                    playlistNameArg.orEmpty(),
-                    playlistDescriptionArg.orEmpty(),
-                    playlistTrackCountArg ?: 0,
-                    trackInfoList.orEmpty()
-                )
-                val sendMessage = Intent(Intent.ACTION_SEND)
-                val shareIntent = Intent.createChooser(sendMessage, null)
-                sendMessage.type = "text/plain"
-                sendMessage.putExtra(Intent.EXTRA_TEXT, message)
-                startActivity(shareIntent)
+                if (playlistTrackCountArg == 0 || trackInfoList.isNullOrEmpty()) {
+                    Toast.makeText(
+                        requireContext(), R.string.track_share_is_empty,
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    dismiss()
+                } else {
+                    val message = createShareMessage(
+                        playlistNameArg.orEmpty(),
+                        playlistDescriptionArg.orEmpty(),
+                        playlistTrackCountArg ?: 0,
+                        trackInfoList.orEmpty()
+                    )
+                    val sendMessage = Intent(Intent.ACTION_SEND)
+                    val shareIntent = Intent.createChooser(sendMessage, null)
+                    sendMessage.type = "text/plain"
+                    sendMessage.putExtra(Intent.EXTRA_TEXT, message)
+                    startActivity(shareIntent)
+                }
             }
         }
     }

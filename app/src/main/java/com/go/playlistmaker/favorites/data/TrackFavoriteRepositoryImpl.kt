@@ -4,7 +4,7 @@ import com.go.playlistmaker.favorites.data.db.TrackFavorite
 import com.go.playlistmaker.favorites.data.db.TrackFavoriteDao
 import com.go.playlistmaker.favorites.domain.api.TrackFavoriteRepository
 import com.go.playlistmaker.searchtrack.data.mappers.TrackMapper
-import com.go.playlistmaker.searchtrack.domain.models.Track
+import com.go.playlistmaker.searchtrack.domain.models.TrackDomain
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
@@ -19,7 +19,7 @@ class TrackFavoriteRepositoryImpl(private val trackFavoriteDao: TrackFavoriteDao
         trackFavoriteDao.delete(item)
     }
 
-    override fun getAllItem(): Flow<List<Track>> = trackFavoriteDao.getAllItems().map { items ->
+    override fun getAllItem(): Flow<List<TrackDomain>> = trackFavoriteDao.getAllItems().map { items ->
         items.map { TrackMapper.trackFavoriteToTrack(it) }
     }
 

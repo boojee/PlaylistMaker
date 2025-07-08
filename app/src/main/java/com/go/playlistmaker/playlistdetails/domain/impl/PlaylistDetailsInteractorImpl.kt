@@ -1,6 +1,6 @@
 package com.go.playlistmaker.playlistdetails.domain.impl
 
-import com.go.playlistmaker.playlistdetails.data.db.Track
+import com.go.playlistmaker.searchtrack.domain.models.TrackDomain
 import com.go.playlistmaker.playlistdetails.domain.api.PlaylistDetailsInteractor
 import com.go.playlistmaker.playlistdetails.domain.api.PlaylistDetailsRepository
 import com.go.playlistmaker.playlists.data.db.Playlist
@@ -15,11 +15,11 @@ class PlaylistDetailsInteractorImpl(private val playlistDetailsRepository: Playl
     override suspend fun deleteTrackFromPlaylist(
         playlistId: Long,
         trackId: Int
-    ): Flow<List<Track>> {
+    ): Flow<List<TrackDomain>> {
         return playlistDetailsRepository.deleteTrackFromPlaylist(playlistId, trackId)
     }
 
-    override fun getAllTracksForPlaylist(trackIds: List<Long>): Flow<List<Track>> {
+    override fun getAllTracksForPlaylist(trackIds: List<Long>): Flow<List<TrackDomain>> {
         return playlistDetailsRepository.getAllTracksForPlaylist(trackIds)
     }
 

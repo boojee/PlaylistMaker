@@ -27,7 +27,11 @@ class PlaylistDetailsViewModel(
         viewModelScope.launch {
             playlistDetailsInteractor.getAllTracksForPlaylist(trackIds)
                 .collect { tracks ->
-                    playlistDetailsMutableLiveData.postValue(PlaylistDetailsState.TracksDetails(tracks))
+                    val trackMap = tracks.associateBy { it.trackId }
+                    val sortedTracks = trackIds.mapNotNull { trackMap[it] }.reversed()
+                    playlistDetailsMutableLiveData.postValue(
+                        PlaylistDetailsState.TracksDetails(sortedTracks)
+                    )
                 }
         }
     }
