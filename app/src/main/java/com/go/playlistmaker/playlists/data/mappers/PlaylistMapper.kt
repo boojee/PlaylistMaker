@@ -15,4 +15,14 @@ object PlaylistMapper {
             playlistTrackTiming = playlist.playlistTrackTiming
         )
     }
+    fun toPlaylistEntity(playlistDomain: PlaylistDomain): Playlist {
+        return Playlist(
+            playlistName = playlistDomain.playlistName,
+            playlistDescription = playlistDomain.playlistDescription,
+            playlistUri = playlistDomain.playlistUri,
+            playlistTrackIds = playlistDomain.playlistTrackIds,
+            playlistTracksCount = playlistDomain.playlistTracksCount,
+            playlistTrackTiming = playlistDomain.playlistTrackTiming
+        )
+    }
 }

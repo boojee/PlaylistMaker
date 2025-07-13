@@ -2,8 +2,8 @@ package com.go.playlistmaker.audioplayer.domain.impl
 
 import com.go.playlistmaker.audioplayer.domain.api.AudioPlayerInteractor
 import com.go.playlistmaker.audioplayer.domain.api.AudioPlayerRepository
-import com.go.playlistmaker.playlistdetails.data.db.Track
-import com.go.playlistmaker.playlists.data.db.Playlist
+import com.go.playlistmaker.playlists.domain.models.PlaylistDomain
+import com.go.playlistmaker.searchtrack.domain.models.TrackDomain
 import kotlinx.coroutines.flow.Flow
 import java.util.concurrent.Executors
 
@@ -44,11 +44,11 @@ class AudioPlayerInteractorImpl(private val audioPlayerRepository: AudioPlayerRe
     ): Flow<Boolean> =
         audioPlayerRepository.checkContainsTrackIdInPlaylist(playlistId, trackId)
 
-    override fun getPlaylist(): Flow<List<Playlist>> {
+    override fun getPlaylist(): Flow<List<PlaylistDomain>> {
         return audioPlayerRepository.getPlaylist()
     }
 
-    override suspend fun insertTrack(track: Track) {
+    override suspend fun insertTrack(track: TrackDomain) {
         audioPlayerRepository.insertTrack(track)
     }
 }

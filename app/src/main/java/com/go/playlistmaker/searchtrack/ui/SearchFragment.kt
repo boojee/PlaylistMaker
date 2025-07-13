@@ -11,6 +11,8 @@ import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.appcompat.content.res.AppCompatResources.getDrawable
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
@@ -44,6 +46,8 @@ class SearchFragment : Fragment() {
     private var isClickAllowed = true
     private var trackAdapter: TrackAdapter? = null
     private var searchJob: Job? = null
+    private var bottomNav: View? = null
+    private var divider: View? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -61,6 +65,12 @@ class SearchFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        bottomNav = requireActivity().findViewById(R.id.bottomNavigationView)
+        divider = requireActivity().findViewById(R.id.divider)
+
+        setupKeyboardListener()
+
         trackSearchViewModel.getSearchStateLiveData().observe(viewLifecycleOwner) { searchState ->
             when (searchState) {
                 is SearchState.SearchLoading -> {
@@ -162,6 +172,17 @@ class SearchFragment : Fragment() {
         if (savedInstanceState != null) {
             editTextContent = savedInstanceState.getString("EDIT_TEXT_CONTENT")
             binding.editTextSearch.setText(editTextContent)
+        }
+    }
+
+    private fun setupKeyboardListener() {
+        ViewCompat.setOnApplyWindowInsetsListener(requireActivity().window.decorView) { _, insets ->
+            if (isAdded) {
+                val hide = insets.isVisible(WindowInsetsCompat.Type.ime())
+                bottomNav?.isVisible = !hide
+                divider?.isVisible = !hide
+            }
+            insets
         }
     }
 

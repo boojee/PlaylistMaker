@@ -10,12 +10,12 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.go.playlistmaker.R
-import com.go.playlistmaker.playlists.data.db.Playlist
+import com.go.playlistmaker.playlists.domain.models.PlaylistDomain
 import java.io.File
 
 class PlaylistAdapter(
-    private val onItemClick: (Playlist) -> Unit
-) : ListAdapter<Playlist, PlaylistAdapter.PlaylistViewHolder>(PlaylistDiffCallback()) {
+    private val onItemClick: (PlaylistDomain) -> Unit
+) : ListAdapter<PlaylistDomain, PlaylistAdapter.PlaylistViewHolder>(PlaylistDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PlaylistViewHolder {
         val view = LayoutInflater.from(parent.context)
@@ -29,13 +29,13 @@ class PlaylistAdapter(
 
     class PlaylistViewHolder(
         itemView: View,
-        private val onItemClick: (Playlist) -> Unit
+        private val onItemClick: (PlaylistDomain) -> Unit
     ) : RecyclerView.ViewHolder(itemView) {
         private val playlistName = itemView.findViewById<TextView>(R.id.playlist_name)
         private val playlistTrackCount = itemView.findViewById<TextView>(R.id.playlist_track_count)
         private val playlistImage = itemView.findViewById<ImageView>(R.id.playlist_image)
 
-        fun bind(playlist: Playlist) {
+        fun bind(playlist: PlaylistDomain) {
             playlistName.text = playlist.playlistName
             playlistTrackCount.text = playlist.playlistTracksCount.toString()
 
@@ -66,12 +66,12 @@ class PlaylistAdapter(
     }
 }
 
-class PlaylistDiffCallback : DiffUtil.ItemCallback<Playlist>() {
-    override fun areItemsTheSame(oldItem: Playlist, newItem: Playlist): Boolean {
+class PlaylistDiffCallback : DiffUtil.ItemCallback<PlaylistDomain>() {
+    override fun areItemsTheSame(oldItem: PlaylistDomain, newItem: PlaylistDomain): Boolean {
         return oldItem.playlistId == newItem.playlistId
     }
 
-    override fun areContentsTheSame(oldItem: Playlist, newItem: Playlist): Boolean {
+    override fun areContentsTheSame(oldItem: PlaylistDomain, newItem: PlaylistDomain): Boolean {
         return oldItem == newItem
     }
 }

@@ -221,7 +221,7 @@ class PlaylistDetailsFragment : Fragment() {
                                     playlistDescription = playlist.playlistDescription,
                                     playlistImage = playlist.playlistUri,
                                     playlistTrackCount = playlist.playlistTracksCount,
-                                    playlistId = playlist.playlistId,
+                                    playlistId = playlist.playlistId ?: 0,
                                     trackInfoList = trackList
                                 )
                             bottomSheetFragment.show(

@@ -1,8 +1,9 @@
 package com.go.playlistmaker.playlistdetails.data
 
 import com.go.playlistmaker.playlistdetails.domain.api.PlaylistDetailsRepository
-import com.go.playlistmaker.playlists.data.db.Playlist
 import com.go.playlistmaker.playlists.data.db.PlaylistDao
+import com.go.playlistmaker.playlists.data.mappers.PlaylistMapper
+import com.go.playlistmaker.playlists.domain.models.PlaylistDomain
 import com.go.playlistmaker.searchtrack.data.mappers.TrackMapper
 import com.go.playlistmaker.searchtrack.domain.models.TrackDomain
 import kotlinx.coroutines.flow.Flow
@@ -10,8 +11,11 @@ import kotlinx.coroutines.flow.map
 
 class PlaylistDetailsRepositoryImpl(private val playlistDao: PlaylistDao) :
     PlaylistDetailsRepository {
-    override fun getPlaylistById(playlistId: Long): Flow<Playlist> {
-        return playlistDao.getPlaylistById(playlistId)
+
+        override fun getPlaylistById(playlistId: Long): Flow<PlaylistDomain> {
+        return playlistDao.getPlaylistById(playlistId).map { playlist ->
+            PlaylistMapper.toPlaylist(playlist)
+        }
     }
 
     override suspend fun deleteTrackFromPlaylist(
@@ -31,8 +35,8 @@ class PlaylistDetailsRepositoryImpl(private val playlistDao: PlaylistDao) :
             }
         }
 
-    override suspend fun updatePlaylist(playlist: Playlist) {
-        playlistDao.update(playlist)
+    override suspend fun updatePlaylist(playlist: PlaylistDomain) {
+        playlistDao.update(PlaylistMapper.toPlaylistEntity(playlist))
     }
 
     override suspend fun deletePlaylistAndUnusedTracks(playlistId: Long) {

@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.go.playlistmaker.createplaylist.domain.api.CreatePlaylistInteractor
 import com.go.playlistmaker.playlistdetails.domain.api.PlaylistDetailsInteractor
-import com.go.playlistmaker.playlists.data.db.Playlist
+import com.go.playlistmaker.playlists.domain.models.PlaylistDomain
 import kotlinx.coroutines.launch
 
 class CreatePlaylistViewModel(
@@ -14,10 +14,10 @@ class CreatePlaylistViewModel(
     private val playlistDetailsInteractor: PlaylistDetailsInteractor
 ) : ViewModel() {
 
-    private val playlistMutableLiveData = MutableLiveData<Playlist>()
-    val playlistLiveData: LiveData<Playlist> = playlistMutableLiveData
+    private val playlistMutableLiveData = MutableLiveData<PlaylistDomain>()
+    val playlistLiveData: LiveData<PlaylistDomain> = playlistMutableLiveData
 
-    fun insertPlaylist(playlist: Playlist) {
+    fun insertPlaylist(playlist: PlaylistDomain) {
         viewModelScope.launch {
             createPlaylistInteractor.insertPlaylist(playlist)
         }
@@ -32,7 +32,7 @@ class CreatePlaylistViewModel(
         }
     }
 
-    fun updatePlaylist(playlist: Playlist) {
+    fun updatePlaylist(playlist: PlaylistDomain) {
         viewModelScope.launch {
             playlistDetailsInteractor.updatePlaylist(playlist)
         }

@@ -40,6 +40,22 @@ object TrackMapper {
         )
     }
 
+    fun toTrackEntity(trackDomain: TrackDomain): Track {
+        return Track(
+            trackId = trackDomain.trackId,
+            trackName = trackDomain.trackName,
+            artistName = trackDomain.artistName,
+            trackTimeMillis = trackDomain.trackTimeMillis,
+            artworkUrl100 = trackDomain.artworkUrl100,
+            collectionName = trackDomain.collectionName,
+            releaseDate = trackDomain.releaseDate,
+            primaryGenreName = trackDomain.primaryGenreName,
+            country = trackDomain.country,
+            previewUrl = trackDomain.previewUrl,
+            isFavorite = trackDomain.isFavorite
+        )
+    }
+
     fun trackFavoriteToTrack(trackFavorite: TrackFavorite): TrackDomain {
         return TrackDomain(
             trackId = trackFavorite.trackId,
@@ -53,6 +69,22 @@ object TrackMapper {
             country = trackFavorite.country,
             previewUrl = trackFavorite.previewUrl,
             isFavorite = trackFavorite.isFavorite
+        )
+    }
+
+    fun trackFavoriteToTrack(trackDomain: TrackDomain): TrackFavorite {
+        return TrackFavorite(
+            trackId = trackDomain.trackId,
+            trackName = trackDomain.trackName,
+            artistName = trackDomain.artistName,
+            trackTimeMillis = trackDomain.trackTimeMillis,
+            artworkUrl100 = trackDomain.artworkUrl100,
+            collectionName = trackDomain.collectionName,
+            releaseDate = trackDomain.releaseDate,
+            primaryGenreName = trackDomain.primaryGenreName,
+            country = trackDomain.country,
+            previewUrl = trackDomain.previewUrl,
+            isFavorite = trackDomain.isFavorite
         )
     }
 }

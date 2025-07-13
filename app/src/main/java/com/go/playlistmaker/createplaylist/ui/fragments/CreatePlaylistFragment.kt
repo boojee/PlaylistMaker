@@ -22,7 +22,7 @@ import com.google.android.material.R as RMaterial
 import com.go.playlistmaker.createplaylist.ui.CreatePlaylistViewModel
 import com.go.playlistmaker.createplaylist.ui.cancelcreateplaylist.CancelCreatingPlaylistDialogFragment
 import com.go.playlistmaker.databinding.FragmentCreatePlaylistBinding
-import com.go.playlistmaker.playlists.data.db.Playlist
+import com.go.playlistmaker.playlists.domain.models.PlaylistDomain
 import com.google.android.material.snackbar.Snackbar
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.io.File
@@ -54,7 +54,7 @@ class CreatePlaylistFragment : Fragment() {
     private var playlistImageUri: Uri? = null
     private var isCreatePlaylist: Boolean? = null
     private var playlistId: Long? = null
-    private var playlist: Playlist? = null
+    private var playlist: PlaylistDomain? = null
 
 
     private val createPlaylistViewModel: CreatePlaylistViewModel by viewModel()
@@ -114,6 +114,19 @@ class CreatePlaylistFragment : Fragment() {
                 findNavController().popBackStack()
             }
         }
+
+        view.viewTreeObserver.addOnGlobalLayoutListener {
+            val rect = android.graphics.Rect()
+            view.getWindowVisibleDisplayFrame(rect)
+            val screenHeight = view.rootView.height
+            val keypadHeight = screenHeight - rect.bottom
+
+            if (keypadHeight > screenHeight * 0.15) {
+                binding.createButton.visibility = View.GONE
+            } else {
+                binding.createButton.visibility = View.VISIBLE
+            }
+        }
     }
 
     private fun createPlaylist(view: View) {
@@ -131,7 +144,7 @@ class CreatePlaylistFragment : Fragment() {
                 val trimmedName = playlistName.trim()
                 if (trimmedName.isNotEmpty()) {
                     createPlaylistViewModel.insertPlaylist(
-                        Playlist(
+                        PlaylistDomain(
                             playlistName = trimmedName,
                             playlistDescription = playlistDescription,
                             playlistUri = playlistImageUri.toString(),

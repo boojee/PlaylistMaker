@@ -12,8 +12,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.go.playlistmaker.R
 import com.go.playlistmaker.audioplayer.ui.AudioPlayerFragment.Companion.IS_FAVORITE
 import com.go.playlistmaker.createplaylist.ui.fragments.CreatePlaylistFragment
-import com.go.playlistmaker.playlistdetails.data.db.Track
-import com.go.playlistmaker.playlists.data.db.Playlist
+import com.go.playlistmaker.playlists.domain.models.PlaylistDomain
+import com.go.playlistmaker.searchtrack.domain.models.TrackDomain
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -64,7 +64,7 @@ class PlaylistBottomSheetFragment : BottomSheetDialogFragment() {
     }
 
     private var trackId: Long? = null
-    private var playlist: Playlist? = null
+    private var playlist: PlaylistDomain? = null
     private var trackName: String? = null
     private var artistName: String? = null
     private var trackTimeMillis: String? = null
@@ -109,10 +109,12 @@ class PlaylistBottomSheetFragment : BottomSheetDialogFragment() {
 
         val adapter = PlaylistAdapter { playlist ->
             if (trackId != null) {
-                playlistBottomSheetViewModel.checkContainsTrackIdInPlaylist(
-                    playlistId = playlist.playlistId,
-                    trackId = trackId!!
-                )
+                playlist.playlistId?.let {
+                    playlistBottomSheetViewModel.checkContainsTrackIdInPlaylist(
+                        playlistId = it,
+                        trackId = trackId!!
+                    )
+                }
                 this.playlist = playlist
             }
         }
@@ -157,9 +159,9 @@ class PlaylistBottomSheetFragment : BottomSheetDialogFragment() {
             }
     }
 
-    private fun insertTrack(playlist: Playlist?, trackId: Long?) {
+    private fun insertTrack(playlist: PlaylistDomain?, trackId: Long?) {
         if (playlist != null && trackId != null) {
-            val track = Track(
+            val track = TrackDomain(
                 trackId = trackId,
                 trackName = trackName.orEmpty(),
                 artistName = artistName.orEmpty(),
@@ -172,7 +174,7 @@ class PlaylistBottomSheetFragment : BottomSheetDialogFragment() {
                 previewUrl = previewUrl.orEmpty(),
                 isFavorite = isFavorite ?: false
             )
-            playlistBottomSheetViewModel.insertTrack(playlist.playlistId, track)
+            playlist.playlistId?.let { playlistBottomSheetViewModel.insertTrack(it, track) }
         }
     }
 

@@ -1,7 +1,7 @@
 package com.go.playlistmaker.playlists.domain.models
 
 data class PlaylistDomain(
-    val playlistId: Long,
+    val playlistId: Long? = null,
     val playlistName: String,
     val playlistDescription: String,
     val playlistUri: String,

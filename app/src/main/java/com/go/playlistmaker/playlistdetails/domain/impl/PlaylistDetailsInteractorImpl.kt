@@ -3,12 +3,12 @@ package com.go.playlistmaker.playlistdetails.domain.impl
 import com.go.playlistmaker.searchtrack.domain.models.TrackDomain
 import com.go.playlistmaker.playlistdetails.domain.api.PlaylistDetailsInteractor
 import com.go.playlistmaker.playlistdetails.domain.api.PlaylistDetailsRepository
-import com.go.playlistmaker.playlists.data.db.Playlist
+import com.go.playlistmaker.playlists.domain.models.PlaylistDomain
 import kotlinx.coroutines.flow.Flow
 
 class PlaylistDetailsInteractorImpl(private val playlistDetailsRepository: PlaylistDetailsRepository) :
     PlaylistDetailsInteractor {
-    override fun getPlaylistById(playlistId: Long): Flow<Playlist> {
+    override fun getPlaylistById(playlistId: Long): Flow<PlaylistDomain> {
         return playlistDetailsRepository.getPlaylistById(playlistId)
     }
 
@@ -23,7 +23,7 @@ class PlaylistDetailsInteractorImpl(private val playlistDetailsRepository: Playl
         return playlistDetailsRepository.getAllTracksForPlaylist(trackIds)
     }
 
-    override suspend fun updatePlaylist(playlist: Playlist) {
+    override suspend fun updatePlaylist(playlist: PlaylistDomain) {
         playlistDetailsRepository.updatePlaylist(playlist)
     }
 

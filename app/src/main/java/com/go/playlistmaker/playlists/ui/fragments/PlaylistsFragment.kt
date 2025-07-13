@@ -24,7 +24,7 @@ class PlaylistsFragment : Fragment() {
         findNavController().navigate(
             R.id.playlistDetailsFragment,
             PlaylistDetailsFragment.createArgs(
-                playlistId = playlist.playlistId,
+                playlistId = playlist.playlistId ?: 0,
                 tracksIds = playlist.playlistTrackIds.map { track -> track.toLong() },
                 playlistName = playlist.playlistName,
                 playlistDescription = playlist.playlistDescription
