@@ -13,7 +13,7 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.go.playlistmaker.R
 import com.go.playlistmaker.audioplayer.ui.playlistbottomsheet.PlaylistBottomSheetFragment
 import com.go.playlistmaker.databinding.FragmentAudioPlayerBinding
-import com.go.playlistmaker.favorites.data.db.TrackFavorite
+import com.go.playlistmaker.searchtrack.domain.models.TrackDomain
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
@@ -173,7 +173,7 @@ class AudioPlayerFragment : Fragment() {
 
         binding.addToFavoriteButton.setOnClickListener {
             val newFavoriteState = isFavorite != true
-            val track = TrackFavorite(
+            val track = TrackDomain(
                 trackId = trackId ?: 0,
                 trackName = trackName.orEmpty(),
                 artistName = artistName.orEmpty(),
@@ -204,7 +204,19 @@ class AudioPlayerFragment : Fragment() {
         binding.addToPlaylistButton.setOnClickListener {
             if (trackId != null) {
                 val bottomSheetFragment =
-                    PlaylistBottomSheetFragment.newInstance(trackId = trackId!!)
+                    PlaylistBottomSheetFragment.newInstance(
+                        trackId = trackId!!,
+                        trackName = trackName.orEmpty(),
+                        artistName = artistName.orEmpty(),
+                        trackTimeMillis = trackTimeMillis.orEmpty(),
+                        artworkUrl100 = artworkUrl100.orEmpty(),
+                        collectionName = collectionName.orEmpty(),
+                        releaseDate = releaseDate.orEmpty(),
+                        primaryGenreName = primaryGenreName.orEmpty(),
+                        country = country.orEmpty(),
+                        previewUrl = previewUrl.orEmpty(),
+                        isFavorite = isFavorite ?: false
+                    )
                 bottomSheetFragment.show(
                     parentFragmentManager,
                     "PlaylistBottomSheetTag"

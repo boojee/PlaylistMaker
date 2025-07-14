@@ -11,6 +11,8 @@ import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.appcompat.content.res.AppCompatResources.getDrawable
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
@@ -18,7 +20,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.go.playlistmaker.R
-import com.go.playlistmaker.searchtrack.domain.models.Track
+import com.go.playlistmaker.searchtrack.domain.models.TrackDomain
 import com.go.playlistmaker.audioplayer.ui.AudioPlayerFragment
 import com.go.playlistmaker.databinding.FragmentSearchBinding
 import com.go.playlistmaker.searchtrack.ui.adapters.TrackAdapter
@@ -38,12 +40,14 @@ class SearchFragment : Fragment() {
     private lateinit var binding: FragmentSearchBinding
 
     private var editTextContent: String? = null
-    private val musicList: MutableList<Track> = mutableListOf()
+    private val musicList: MutableList<TrackDomain> = mutableListOf()
     private var lastSearchQuery: String? = null
     private var isLastRequestFailed: Boolean = false
     private var isClickAllowed = true
     private var trackAdapter: TrackAdapter? = null
     private var searchJob: Job? = null
+    private var bottomNav: View? = null
+    private var divider: View? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -61,6 +65,12 @@ class SearchFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        bottomNav = requireActivity().findViewById(R.id.bottomNavigationView)
+        divider = requireActivity().findViewById(R.id.divider)
+
+        setupKeyboardListener()
+
         trackSearchViewModel.getSearchStateLiveData().observe(viewLifecycleOwner) { searchState ->
             when (searchState) {
                 is SearchState.SearchLoading -> {
@@ -165,6 +175,17 @@ class SearchFragment : Fragment() {
         }
     }
 
+    private fun setupKeyboardListener() {
+        ViewCompat.setOnApplyWindowInsetsListener(requireActivity().window.decorView) { _, insets ->
+            if (isAdded) {
+                val hide = insets.isVisible(WindowInsetsCompat.Type.ime())
+                bottomNav?.isVisible = !hide
+                divider?.isVisible = !hide
+            }
+            insets
+        }
+    }
+
     private fun initRecyclerView() {
         binding.recyclerViewSearch.layoutManager = LinearLayoutManager(requireContext())
         trackAdapter = TrackAdapter { track ->
@@ -204,7 +225,7 @@ class SearchFragment : Fragment() {
         trackSearchViewModel.findMusic(lastSearchQuery.orEmpty())
     }
 
-    private fun isVisibleHistoryMusicList(foundMusicHistory: List<Track>) {
+    private fun isVisibleHistoryMusicList(foundMusicHistory: List<TrackDomain>) {
         if (binding.editTextSearch.hasFocus() && binding.editTextSearch.text.isNullOrEmpty() && foundMusicHistory.isNotEmpty()) {
             binding.searchTextViewForHistory.isVisible = true
             binding.buttonClearSearchHistory.isVisible = true
@@ -215,7 +236,7 @@ class SearchFragment : Fragment() {
         }
     }
 
-    private fun stateMusicList(foundMusic: List<Track>) {
+    private fun stateMusicList(foundMusic: List<TrackDomain>) {
         binding.progressBar.isVisible = false
         if (foundMusic.isNotEmpty()) {
             musicList.addAll(foundMusic)

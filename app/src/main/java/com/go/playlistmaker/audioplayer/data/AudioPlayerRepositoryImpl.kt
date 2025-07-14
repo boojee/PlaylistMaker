@@ -2,12 +2,16 @@ package com.go.playlistmaker.audioplayer.data
 
 import android.media.MediaPlayer
 import com.go.playlistmaker.audioplayer.domain.api.AudioPlayerRepository
-import com.go.playlistmaker.playlists.data.db.Playlist
 import com.go.playlistmaker.playlists.data.db.PlaylistDao
+import com.go.playlistmaker.playlists.data.mappers.PlaylistMapper
+import com.go.playlistmaker.playlists.domain.models.PlaylistDomain
+import com.go.playlistmaker.searchtrack.data.mappers.TrackMapper
+import com.go.playlistmaker.searchtrack.domain.models.TrackDomain
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Locale
@@ -78,5 +82,14 @@ class AudioPlayerRepositoryImpl(
         timerJob?.cancel()
     }
 
-    override fun getPlaylist(): Flow<List<Playlist>> = playlistDao.getPlaylist()
+    override fun getPlaylist(): Flow<List<PlaylistDomain>> =
+        playlistDao.getPlaylist().map { playlist ->
+            playlist.map {
+                PlaylistMapper.toPlaylist(it)
+            }
+        }
+
+    override suspend fun insertTrack(track: TrackDomain) {
+        playlistDao.insertTrack(TrackMapper.toTrackEntity(track))
+    }
 }

@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
     id("com.google.devtools.ksp") version "2.0.21-1.0.26"
+    id("kotlin-parcelize")
 }
 
 android {
@@ -50,7 +51,6 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
-    implementation (libs.material.v161)
     implementation (libs.glide)
     annotationProcessor (libs.compiler)
     implementation (libs.retrofit)
@@ -59,12 +59,10 @@ dependencies {
     implementation (libs.androidx.activity.ktx)
     implementation(libs.koin.android)
     implementation (libs.androidx.fragment.ktx)
-    implementation (libs.material.v180)
     implementation (libs.androidx.viewpager2)
     implementation (libs.androidx.navigation.fragment.ktx)
     implementation (libs.androidx.navigation.ui.ktx)
     implementation (libs.androidx.fragment.ktx.v156)
-    implementation (libs.google.material.v180)
     implementation(libs.kotlinx.coroutines.android)
     implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.room.ktx)

@@ -138,4 +138,31 @@
         <item name="cornerFamily">rounded</item>
         <item name="cornerSize">16dp</item>
     </style>
+
+    <style name="TextViewPlaylistInfoTitle">
+        <item name="fontFamily">@font/ys_display_bold</item>
+        <item name="android:textFontWeight">700</item>
+        <item name="android:textSize">@dimen/text_size_extra_large</item>
+        <item name="android:textColor">@color/color_eerie_black</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:ellipsize">end</item>
+    </style>
+
+    <style name="TextViewPlaylistInfoDescription" parent="TextViewFontWeight">
+        <item name="fontFamily">@font/ys_display_regular</item>
+        <item name="android:textSize">@dimen/text_size_regular</item>
+        <item name="android:textColor">@color/color_eerie_black</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:ellipsize">end</item>
+    </style>
+
+    <style name="LightDialogTheme" parent="Theme.MaterialComponents.Light.Dialog.Alert">
+        <item name="colorPrimary">@color/color_eerie_black</item>
+        <item name="buttonBarPositiveButtonStyle">@style/AlertDialogButtonStyle</item>
+        <item name="buttonBarNegativeButtonStyle">@style/AlertDialogButtonStyle</item>
+    </style>
+
+    <style name="AlertDialogButtonStyle" parent="Widget.MaterialComponents.Button.TextButton">
+        <item name="android:textColor">@color/color_royal_blue</item>
+    </style>
 </resources>

@@ -5,10 +5,12 @@ import com.go.playlistmaker.playlists.ui.PlaylistsViewModel
 import com.go.playlistmaker.audioplayer.ui.AudioPlayerViewModel
 import com.go.playlistmaker.audioplayer.ui.playlistbottomsheet.PlaylistBottomSheetViewModel
 import com.go.playlistmaker.createplaylist.ui.CreatePlaylistViewModel
+import com.go.playlistmaker.playlistdetails.ui.PlaylistDetailsViewModel
 import com.go.playlistmaker.searchtrack.ui.TrackSearchViewModel
 import com.go.playlistmaker.settings.ui.SettingsViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
+import com.go.playlistmaker.playlistdetails.ui.playlistoptionsbottomsheet.PlaylistOptionsBottomSheetViewModel
 
 val viewModelModule = module {
 
@@ -29,7 +31,7 @@ val viewModelModule = module {
     }
 
     viewModel {
-        CreatePlaylistViewModel(createPlaylistInteractor = get())
+        CreatePlaylistViewModel(createPlaylistInteractor = get(), playlistDetailsInteractor = get())
     }
 
     viewModel {
@@ -38,5 +40,13 @@ val viewModelModule = module {
 
     viewModel {
         PlaylistBottomSheetViewModel(audioPlayerInteractor = get())
+    }
+
+    viewModel {
+        PlaylistDetailsViewModel(playlistDetailsInteractor = get())
+    }
+
+    viewModel {
+        PlaylistOptionsBottomSheetViewModel(playlistDetailsInteractor = get())
     }
 }

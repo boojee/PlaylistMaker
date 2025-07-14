@@ -2,7 +2,7 @@ package com.go.playlistmaker.searchtrack.data.localdata
 
 import android.content.SharedPreferences
 import com.go.playlistmaker.searchtrack.data.SearchHistory
-import com.go.playlistmaker.searchtrack.domain.models.Track
+import com.go.playlistmaker.searchtrack.domain.models.TrackDomain
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.flow.Flow
@@ -18,13 +18,13 @@ class SearchHistoryImpl(private val sharedPreferences: SharedPreferences) : Sear
 
     private val gson = Gson()
 
-    override suspend fun addTrack(track: Track) {
+    override suspend fun addTrack(trackDomain: TrackDomain) {
         val historyList = getHistory().firstOrNull() ?: emptyList()
 
         val mutableHistoryList = historyList.toMutableList()
-        mutableHistoryList.removeIf { it.trackId == track.trackId }
+        mutableHistoryList.removeIf { it.trackId == trackDomain.trackId }
 
-        mutableHistoryList.add(0, track)
+        mutableHistoryList.add(0, trackDomain)
 
         if (mutableHistoryList.size > MAX_HISTORY_SIZE) {
             mutableHistoryList.removeAt(mutableHistoryList.size - 1)
@@ -35,7 +35,7 @@ class SearchHistoryImpl(private val sharedPreferences: SharedPreferences) : Sear
             .apply()
     }
 
-    override fun getHistory(): Flow<List<Track>> = flow {
+    override fun getHistory(): Flow<List<TrackDomain>> = flow {
         val historyString = sharedPreferences.getString(HISTORY_KEY, null)
         if (historyString != null) {
             emit(deserializeHistory(historyString))
@@ -46,12 +46,12 @@ class SearchHistoryImpl(private val sharedPreferences: SharedPreferences) : Sear
         sharedPreferences.edit().remove(HISTORY_KEY).apply()
     }
 
-    private fun serializeHistory(history: List<Track>): String {
+    private fun serializeHistory(history: List<TrackDomain>): String {
         return gson.toJson(history)
     }
 
-    private fun deserializeHistory(historyString: String): List<Track> {
-        val type = object : TypeToken<List<Track>>() {}.type
+    private fun deserializeHistory(historyString: String): List<TrackDomain> {
+        val type = object : TypeToken<List<TrackDomain>>() {}.type
         return gson.fromJson(historyString, type)
     }
 }

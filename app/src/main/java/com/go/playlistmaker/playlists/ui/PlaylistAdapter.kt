@@ -10,12 +10,12 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.go.playlistmaker.R
-import com.go.playlistmaker.playlists.data.db.Playlist
+import com.go.playlistmaker.playlists.domain.models.PlaylistDomain
 import java.io.File
 
 class PlaylistAdapter(
-    private val onItemClick: (Playlist) -> Unit
-) : ListAdapter<Playlist, PlaylistAdapter.PlaylistViewHolder>(PlaylistDiffCallback()) {
+    private val onItemClick: (PlaylistDomain) -> Unit
+) : ListAdapter<PlaylistDomain, PlaylistAdapter.PlaylistViewHolder>(PlaylistDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PlaylistViewHolder {
         val inflater = LayoutInflater.from(parent.context)
@@ -29,10 +29,10 @@ class PlaylistAdapter(
 
     class PlaylistViewHolder(
         itemView: View,
-        private val onItemClick: (Playlist) -> Unit
+        private val onItemClick: (PlaylistDomain) -> Unit
     ) : RecyclerView.ViewHolder(itemView) {
 
-        fun bind(playlist: Playlist) {
+        fun bind(playlist: PlaylistDomain) {
             val playlistImage = itemView.findViewById<ImageView>(R.id.playlist_image)
             itemView.findViewById<TextView>(R.id.playlist_name).text = playlist.playlistName
 
@@ -65,12 +65,12 @@ class PlaylistAdapter(
     }
 }
 
-class PlaylistDiffCallback : DiffUtil.ItemCallback<Playlist>() {
-    override fun areItemsTheSame(oldItem: Playlist, newItem: Playlist): Boolean {
+class PlaylistDiffCallback : DiffUtil.ItemCallback<PlaylistDomain>() {
+    override fun areItemsTheSame(oldItem: PlaylistDomain, newItem: PlaylistDomain): Boolean {
         return oldItem.playlistId == newItem.playlistId
     }
 
-    override fun areContentsTheSame(oldItem: Playlist, newItem: Playlist): Boolean {
+    override fun areContentsTheSame(oldItem: PlaylistDomain, newItem: PlaylistDomain): Boolean {
         return oldItem == newItem
     }
 }

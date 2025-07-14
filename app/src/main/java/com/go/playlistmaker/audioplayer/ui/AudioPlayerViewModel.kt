@@ -4,8 +4,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.go.playlistmaker.audioplayer.domain.api.AudioPlayerInteractor
-import com.go.playlistmaker.favorites.data.db.TrackFavorite
 import com.go.playlistmaker.favorites.domain.api.TrackFavoriteInteractor
+import com.go.playlistmaker.searchtrack.domain.models.TrackDomain
 import kotlinx.coroutines.launch
 
 class AudioPlayerViewModel(
@@ -60,11 +60,11 @@ class AudioPlayerViewModel(
         }
     }
 
-    fun addTrackFavorite(track: TrackFavorite) {
+    fun addTrackFavorite(track: TrackDomain) {
         viewModelScope.launch { trackFavoriteInteractor.insert(track) }
     }
 
-    fun deleteTrackFavorite(track: TrackFavorite) {
+    fun deleteTrackFavorite(track: TrackDomain) {
         viewModelScope.launch { trackFavoriteInteractor.delete(track) }
     }
 

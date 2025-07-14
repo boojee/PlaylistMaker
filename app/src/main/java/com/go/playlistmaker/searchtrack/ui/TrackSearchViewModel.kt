@@ -4,7 +4,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.go.playlistmaker.searchtrack.domain.api.TrackInteractor
-import com.go.playlistmaker.searchtrack.domain.models.Track
+import com.go.playlistmaker.searchtrack.domain.models.TrackDomain
 import kotlinx.coroutines.launch
 
 class TrackSearchViewModel(
@@ -36,8 +36,8 @@ class TrackSearchViewModel(
         }
     }
 
-    fun addMusicHistory(track: Track) {
-        viewModelScope.launch { trackInteractor.addMusicHistory(track) }
+    fun addMusicHistory(trackDomain: TrackDomain) {
+        viewModelScope.launch { trackInteractor.addMusicHistory(trackDomain) }
     }
 
     fun findMusicHistory() {

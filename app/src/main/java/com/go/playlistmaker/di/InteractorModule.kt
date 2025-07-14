@@ -6,6 +6,8 @@ import com.go.playlistmaker.createplaylist.domain.api.CreatePlaylistInteractor
 import com.go.playlistmaker.createplaylist.domain.impl.CreatePlaylistInteractorImpl
 import com.go.playlistmaker.favorites.domain.api.TrackFavoriteInteractor
 import com.go.playlistmaker.favorites.domain.impl.TrackFavoriteInteractorImpl
+import com.go.playlistmaker.playlistdetails.domain.api.PlaylistDetailsInteractor
+import com.go.playlistmaker.playlistdetails.domain.impl.PlaylistDetailsInteractorImpl
 import com.go.playlistmaker.playlists.domain.api.PlaylistInteractor
 import com.go.playlistmaker.playlists.domain.impl.PlaylistInteractorImpl
 import com.go.playlistmaker.searchtrack.domain.api.TrackInteractor
@@ -38,5 +40,9 @@ val interactorModule = module {
 
     factory<PlaylistInteractor> {
         PlaylistInteractorImpl(playlistRepository = get())
+    }
+
+    factory<PlaylistDetailsInteractor> {
+        PlaylistDetailsInteractorImpl(playlistDetailsRepository = get())
     }
 }

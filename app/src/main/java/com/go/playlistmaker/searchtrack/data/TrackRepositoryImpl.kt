@@ -5,7 +5,7 @@ import com.go.playlistmaker.searchtrack.data.dto.TrackSearchResponse
 import com.go.playlistmaker.searchtrack.data.dto.TrackSearchRequest
 import com.go.playlistmaker.searchtrack.data.mappers.TrackMapper
 import com.go.playlistmaker.searchtrack.domain.api.TrackRepository
-import com.go.playlistmaker.searchtrack.domain.models.Track
+import com.go.playlistmaker.searchtrack.domain.models.TrackDomain
 import com.go.playlistmaker.searchtrack.util.Resource
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
@@ -16,7 +16,7 @@ class TrackRepositoryImpl(
     private val searchHistory: SearchHistory,
     private val trackFavoriteDao: TrackFavoriteDao
 ) : TrackRepository {
-    override fun findMusic(expression: String): Flow<Resource<List<Track>>> = flow {
+    override fun findMusic(expression: String): Flow<Resource<List<TrackDomain>>> = flow {
         val response = networkClient.doRequest(TrackSearchRequest(expression))
         when (response.resultCode) {
             -1 -> {
@@ -39,7 +39,7 @@ class TrackRepositoryImpl(
         }
     }
 
-    override fun findMusicHistory(): Flow<List<Track>> = flow {
+    override fun findMusicHistory(): Flow<List<TrackDomain>> = flow {
         searchHistory.getHistory().collect { tracksHistory ->
             val trackFavoriteList = trackFavoriteDao.getAllItemsId().first()
             emit(tracksHistory.map { trackHistory ->
@@ -52,8 +52,8 @@ class TrackRepositoryImpl(
         }
     }
 
-    override suspend fun addMusicHistory(track: Track) {
-        searchHistory.addTrack(track)
+    override suspend fun addMusicHistory(trackDomain: TrackDomain) {
+        searchHistory.addTrack(trackDomain)
     }
 
     override fun clearHistory() {

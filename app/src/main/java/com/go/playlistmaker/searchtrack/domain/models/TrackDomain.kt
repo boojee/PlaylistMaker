@@ -1,6 +1,6 @@
 package com.go.playlistmaker.searchtrack.domain.models
 
-data class Track(
+data class TrackDomain(
     val trackId: Long,
     val trackName: String,
     val artistName: String,

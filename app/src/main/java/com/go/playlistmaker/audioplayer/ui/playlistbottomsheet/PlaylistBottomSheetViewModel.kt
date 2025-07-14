@@ -4,6 +4,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.go.playlistmaker.audioplayer.domain.api.AudioPlayerInteractor
+import com.go.playlistmaker.searchtrack.domain.models.TrackDomain
 import kotlinx.coroutines.launch
 
 class PlaylistBottomSheetViewModel(private val audioPlayerInteractor: AudioPlayerInteractor): ViewModel() {
@@ -15,13 +16,6 @@ class PlaylistBottomSheetViewModel(private val audioPlayerInteractor: AudioPlaye
     }
 
     fun getPlaylistStateLiveData(): MutableLiveData<PlaylistState> = playlistStateLiveData
-
-    fun updatePlaylistTrackIds(playlistId: Long, trackId: Int){
-        viewModelScope.launch {
-            audioPlayerInteractor.updatePlaylistTrackIds(playlistId, trackId)
-            getPlaylist()
-        }
-    }
 
     fun checkContainsTrackIdInPlaylist(playlistId: Long, trackId: Long){
         viewModelScope.launch {
@@ -38,6 +32,14 @@ class PlaylistBottomSheetViewModel(private val audioPlayerInteractor: AudioPlaye
                 .collect {
                     playlistStateLiveData.postValue(PlaylistState.PlaylistList(it))
                 }
+        }
+    }
+
+    fun insertTrack(playlistId: Long, track: TrackDomain) {
+        viewModelScope.launch {
+            audioPlayerInteractor.insertTrack(track)
+            audioPlayerInteractor.updatePlaylistTrackIds(playlistId, track.trackId.toInt())
+            playlistStateLiveData.postValue(PlaylistState.TrackAdded)
         }
     }
 }

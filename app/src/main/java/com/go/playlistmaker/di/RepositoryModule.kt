@@ -6,6 +6,8 @@ import com.go.playlistmaker.createplaylist.data.CreatePlaylistRepositoryImpl
 import com.go.playlistmaker.createplaylist.domain.api.CreatePlaylistRepository
 import com.go.playlistmaker.favorites.data.TrackFavoriteRepositoryImpl
 import com.go.playlistmaker.favorites.domain.api.TrackFavoriteRepository
+import com.go.playlistmaker.playlistdetails.data.PlaylistDetailsRepositoryImpl
+import com.go.playlistmaker.playlistdetails.domain.api.PlaylistDetailsRepository
 import com.go.playlistmaker.playlists.data.PlaylistRepositoryImpl
 import com.go.playlistmaker.playlists.domain.api.PlaylistRepository
 import com.go.playlistmaker.searchtrack.data.TrackRepositoryImpl
@@ -48,6 +50,12 @@ val repositoryModule = module {
 
     factory<PlaylistRepository> {
         PlaylistRepositoryImpl(
+            playlistDao = get()
+        )
+    }
+
+    factory<PlaylistDetailsRepository> {
+        PlaylistDetailsRepositoryImpl(
             playlistDao = get()
         )
     }
